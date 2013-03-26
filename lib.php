@@ -76,7 +76,7 @@ function contag_get_item_display_name($item) {
 	$type = $item -> type;
 	$res = 'NAME NOT FOUND';
 	if (in_array($type, $CONTAG_INBUILT_ITEM_TYPES)) {
-		$res =           get_coursemodule_from_id($type, $item -> item_id) -> name;
+		$res =             get_coursemodule_from_id($type, $item -> item_id) -> name;
 	} else if ($type == 'generic') {
 		$res = $item -> description;
 	}
@@ -308,19 +308,8 @@ function contag_ensure_tag($courseid, $tag_name, $tree_node_id, $normalized_url)
 		} else//if it is set from the attach_tags form
 		{
 
-			//i need to put it into json file before inserting
-			//i need to get max id for doing that
-			$json_file_path = get_json_file_path($normalized_url, $courseid);
-			//returns json file path
-			//
-			$json = file_get_contents($json_file_path);
-
-			$contag_tag_object -> tree_node_id = append_node_to_json($json, $contag_tag_object, $normalized_url);
-			//recreate json files
-			$json_path_local = get_json_path_local();
-			if (!copy_files($json_file_path, $json_path_local . 'json_' . $courseid . '.json') != 0) {
-				die("Error. Could not create JSON file locally. \n");
-			}
+			$contag_tag_object -> tree_node_id = append_node_to_json($contag_tag_object, $normalized_url);
+			
 		}
 		try {
 			$tag_id = $DB -> insert_record('block_contag_tag', $contag_tag_object);
@@ -361,7 +350,7 @@ function contag_add_association($course_id, $tag_name, $item_key, $normalized_ur
 	$tag_id = contag_ensure_tag($course_id, $tag_name, NULL, $normalized_url);
 	//NULL FOR tree_node_id is it doesnt have any. and we need to create it
 	//ensure if it exists or create it
-							
+
 	list($item, $is_custom_resolution) = contag_find_item_from_item_key($item_key, $course_id, true, true);
 	// will resolve and create if necessary
 	if ($item && !$DB -> get_record('block_contag_association', array('tag_id' => $tag_id, 'item_type' => $item -> type, 'item_id' => $item -> id))) {// ERROR CHECK on $item, just in case it the module doesn't exist anymore (i.e. someone adding tags and someone else adding modules)
@@ -823,8 +812,7 @@ function contag_print_table($table, $return = false) {
  * @param $coursename - the course's name
  */
 
-function make_empty_json_file($json_file_path, $coursename) {
-	$content = "[{\"id\":1,\"text\":\"" . $coursename . "\"}]";
+function write_to_json_file($content, $json_file_path) {
 	$fh = fopen($json_file_path, 'w') or die("can't open file");
 	fwrite($fh, $content);
 	fclose($fh);
@@ -904,62 +892,60 @@ function json_file_get_max_id($json) {
 	return $max_id;
 }
 
-function append_node_to_json($json, $contag_tag_object, $normalized_url) {
-	//compute new node id
-	$tree_node_id = json_file_get_max_id($json) + 1;
-	//gets max id PLUS 1 will make the next
-
-	$courseid = $contag_tag_object -> course_id;
-	$tag_name = $contag_tag_object -> tag_name;
-
+function new_json_node($id, $text) {
 	//create new content
 	$content = new stdClass();
-	$content -> id = $tree_node_id;
-	$content -> text = $tag_name;
+	$content -> id = $id;
+	$content -> text = $text;
+	return $content;
+}
 
+function append_node_to_json($contag_tag_object, $normalized_url) {
+		
+	$json_file_path = get_json_file_path($normalized_url, $contag_tag_object -> course_id);	
+	$json = file_get_contents($json_file_path);
+	
+	//compute new node id
+	$tree_node_id = json_file_get_max_id($json) + 1;
+	//gets max id PLUS 1 to make the next node
+	$content = new_json_node($tree_node_id, $contag_tag_object -> tag_name);
+
+	
 	//insert new content to json
 	$json_arr = json_decode($json);
 	array_push($json_arr[0] -> children, $content);
-	//	print_r($json_arr);
 
-	$json = json_encode($json_arr);
-
-	//throw new Exception(json_encode($json_arr));
 	//write to file
-	$json_file_path = get_json_file_path($normalized_url, $courseid);
-	$fh = fopen($json_file_path, 'w') or die("can't open file");
-	fwrite($fh, $json);
-	fclose($fh);
+	
+	$content = json_encode($json_arr);
+	write_to_json_file($content, $json_file_path);
+	$json_path_local = get_json_path_local();
+	if (!copy_files($json_file_path, $json_path_local . 'json_' . $contag_tag_object -> course_id . '.json') != 0) {
+		die("Error. Could not create JSON file locally. \n");
+	}
 
 	return $tree_node_id;
 }
 
+function create_removed_nodes_list($tree_node_id) {
 
-function create_removed_nodes_list($tree_node_id)
-{
-	
-	if(!isset($_SESSION['to_remove_nodes']))
-	{
+	if (!isset($_SESSION['to_remove_nodes'])) {
 		$_SESSION['to_remove_nodes'] = array();
 	}
 	//an array of the ids to be removed
-	array_push($_SESSION['to_remove_nodes'] ,$tree_node_id);
+	array_push($_SESSION['to_remove_nodes'], $tree_node_id);
 	print_r($_SESSION['to_remove_nodes']);
-	
+
 }
 
-function get_removed_nodes_list()
-{
-	 	
+function get_removed_nodes_list() {
+
 	global $to_remove_nodes;
-	
-	 return $_SESSION['to_remove_nodes'];
+
+	return $_SESSION['to_remove_nodes'];
 }
 
-
-function remove_nodes_from_json($json, $to_remove_nodes)
-{
-	//to remove these nodes from json	
+function remove_nodes_from_json($json, $to_remove_nodes) {
+	//to remove these nodes from json
 }
-
 ?>
