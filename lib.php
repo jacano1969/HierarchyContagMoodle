@@ -76,7 +76,7 @@ function contag_get_item_display_name($item) {
 	$type = $item -> type;
 	$res = 'NAME NOT FOUND';
 	if (in_array($type, $CONTAG_INBUILT_ITEM_TYPES)) {
-		$res =             get_coursemodule_from_id($type, $item -> item_id) -> name;
+		$res =                 get_coursemodule_from_id($type, $item -> item_id) -> name;
 	} else if ($type == 'generic') {
 		$res = $item -> description;
 	}
@@ -309,13 +309,12 @@ function contag_ensure_tag($courseid, $tag_name, $tree_node_id, $normalized_url)
 		{
 
 			$contag_tag_object -> tree_node_id = append_node_to_json($contag_tag_object, $normalized_url);
-			
+
 		}
 		try {
 			$tag_id = $DB -> insert_record('block_contag_tag', $contag_tag_object);
 			$item = $DB -> get_record('block_contag_tag', array('id' => $tag_id));
-			echo "item is: ";
-			print_r($item);
+
 		} catch (Exception $e) {
 			echo $e -> getMessage() . "\n";
 			$tag_id = false;
@@ -391,6 +390,8 @@ function contag_get_tag_from_tag_id($course_id, $tag_id) {
 
 // deletes the tag, and any associations that it had
 // using ids instead of names, as there's less chance of deleting a recreated tag (with the same name) if the URL is accidently called again
+
+//TODO: marigianna: also delete instances associations from RDF
 function contag_delete_tag($course_id, $tag_id) {
 	global $DB;
 	if (contag_get_tag_from_tag_id($course_id, $tag_id)) {// ERROR CHECK - does it exist (and in this course)?
@@ -847,7 +848,7 @@ function get_json_path_local() {
 	return getcwd() . '/json/';
 }
 
-function read_json_file($json, $courseid) {
+function import_json_to_db($json, $courseid) {
 	global $DB;
 	$jsonIterator = new RecursiveIteratorIterator(new RecursiveArrayIterator(json_decode($json, TRUE)), RecursiveIteratorIterator::SELF_FIRST);
 
@@ -864,10 +865,17 @@ function read_json_file($json, $courseid) {
 			if (contag_validate_tag_name_as_good($cleaned_name)) {
 				//echo "$key => $val\n";
 				$tag_id = contag_ensure_tag($courseid, $val, $tree_node_id, NULL);
+				$item = $DB -> get_record('block_contag_tag', array('id' => $tag_id));
+				echo $tag_id;
+				
+				
 				//normalized_url is NULL as it is not needed
 				if (!$tag_id) {
 					echo "Could not save: " . $val . "\n";
 				}
+			}
+			else {
+				echo "bad name on tag". $cleaned_name;
 			}
 		}
 	}
@@ -901,22 +909,21 @@ function new_json_node($id, $text) {
 }
 
 function append_node_to_json($contag_tag_object, $normalized_url) {
-		
-	$json_file_path = get_json_file_path($normalized_url, $contag_tag_object -> course_id);	
+
+	$json_file_path = get_json_file_path($normalized_url, $contag_tag_object -> course_id);
 	$json = file_get_contents($json_file_path);
-	
+
 	//compute new node id
 	$tree_node_id = json_file_get_max_id($json) + 1;
 	//gets max id PLUS 1 to make the next node
 	$content = new_json_node($tree_node_id, $contag_tag_object -> tag_name);
 
-	
 	//insert new content to json
 	$json_arr = json_decode($json);
 	array_push($json_arr[0] -> children, $content);
 
 	//write to file
-	
+
 	$content = json_encode($json_arr);
 	write_to_json_file($content, $json_file_path);
 	$json_path_local = get_json_path_local();
@@ -927,25 +934,75 @@ function append_node_to_json($contag_tag_object, $normalized_url) {
 	return $tree_node_id;
 }
 
-function create_removed_nodes_list($tree_node_id) {
+function create_to_delete_nodes_list($tree_node_id, $tree_node_text) {
 
+	$node = new_json_node($tree_node_id, $tree_node_text);
 	if (!isset($_SESSION['to_remove_nodes'])) {
 		$_SESSION['to_remove_nodes'] = array();
 	}
 	//an array of the ids to be removed
-	array_push($_SESSION['to_remove_nodes'], $tree_node_id);
-	print_r($_SESSION['to_remove_nodes']);
+	array_push($_SESSION['to_remove_nodes'], $node);
+	//echo "I am in here";
+	//print_r($_SESSION['to_remove_nodes']);
+}
+
+/*
+ * Returns nodes the list with tree_nodes_ids of nodes to delete
+ * if we did not have any remove action, it returns null
+ * */
+
+function get_to_delete_nodes_list() {
+
+	if (isset($_SESSION['to_remove_nodes'])) {
+		return $_SESSION['to_remove_nodes'];
+	} else {
+		return NULL;
+	}
+}
+
+/**
+ * Deletes a node from the tree. This action includes:
+ * nodes that will be removed from json automatically
+ * delete assotiations on nodes and items
+ * remove instances from RDF (TODO)
+ * Unsets the to_remove_nodes session for further use
+ *
+ */
+function contag_delete_tags_from_tree_node_id($to_remove_nodes, $courseid) {
+
+	global $DB;
+
+	foreach ($to_remove_nodes as $node) {
+		//print_r($node);
+		$tag_name = $node -> text;
+		$tree_node_id = $node -> id;
+		try{
+			$item =  $DB -> get_record('block_contag_tag', array('courde_id' => $courseid, 'tag_name' => $tag_name, 'tree_node_id' => $tree_node_id));
+	
+		}
+		catch (Exception $e) {
+    		echo 'Caught exception: ',  $e->getMessage(), "\n";
+		}
+	}
+	unset($_SESSION['to_remove_nodes']);
+	//job is done. unset the session for further use
 
 }
 
-function get_removed_nodes_list() {
-
-	global $to_remove_nodes;
-
-	return $_SESSION['to_remove_nodes'];
+function delete_nodes_to_remove_list() {
+	unset($_SESSION['to_remove_nodes']);
 }
 
-function remove_nodes_from_json($json, $to_remove_nodes) {
-	//to remove these nodes from json
+
+function copy_from_server_to_local($courseid)
+{
+	global $CFG;
+	$normalized_url = normalize_url($CFG -> wwwroot);
+	$json_file_path = get_json_file_path($normalized_url, $courseid);
+	$json_path_local = get_json_path_local();
+	
+	if (!copy_files($json_file_path, $json_path_local . 'json_' . $courseid . '.json') != 0) {
+		die("Error. Could not create JSON file locally. \n");
+	}
 }
 ?>

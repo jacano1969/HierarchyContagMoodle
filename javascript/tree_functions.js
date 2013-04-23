@@ -23,7 +23,7 @@ function append() {
 		parent : ( node ? node.target : null),
 		data : [{
 			id : ++nextId, //insert the nextID
-			text : 'new item1'
+			text : 'newItem'
 		}]
 	};
 
@@ -38,8 +38,9 @@ function remove() {
 	var nodeStr = JSON.stringify(node);
 
 	var node_id = node.id;
+	var node_text = node.text;
 	if (rootStr != nodeStr) {
-		if (confirm("ATTENTION! \n" + " If you delete this node all the instances that are connected to this node and it's children will be deleted." + "\n Are you sure that you want to delete this node?")) {
+		if (confirm("ATTENTION! \n" + " If you delete this node all the instances that are associated to this node and it's children will be deleted." + "\n Are you sure that you want to delete this node?")) {
 			// Delete it!
 			$('#tt').tree('remove', node.target);
 
@@ -47,7 +48,8 @@ function remove() {
 			type : 'POST',
 			url : "ajax_calls.php",
 			data : {
-				"remove_node" : node_id
+				"remove_node_id" : node_id,
+				"remove_node_text" : node_text
 			}
 			});
 		} else {

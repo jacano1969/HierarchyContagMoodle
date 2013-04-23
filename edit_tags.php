@@ -154,10 +154,13 @@ if (has_capability('block/contag:edit', $context)){ // can they edit hierarchy?
 
 	$json_file_url = $CONTAG_JSON_URL .'json_' . $courseid . '.json';
 	//check if file exists or create
+	//throw new Exception($normalized_url);
+	
 	if (!file_exists($json_file_path)) {
 		$content = "[{\"id\":1,\"text\":\"" . $course -> fullname . "\"}]";
-
-		write_to_json_file($content,$json_file_path, $course -> fullname);
+		write_to_json_file($content,$json_file_path, $course -> fullname);	//write to server
+		
+		copy_from_server_to_local($courseid); //write locally for synchronizing dirs
 	}
 
 	//need to copy file locally from server
