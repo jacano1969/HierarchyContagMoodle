@@ -25,10 +25,14 @@ ini_set('display_errors', '1');
 
 //ajax calls
 //if we have chosen to delete at list one node
-if (isset($_POST['remove_node_id']) && isset($_POST['remove_node_text'])) {
+//if (isset($_POST['remove_node_id']) && isset($_POST['remove_node_text'])) {
+if (isset($_POST['subtree_to_remove'])){
 	//if the first node to delete
 	
-	create_to_delete_nodes_list($_POST['remove_node_id'],$_POST['remove_node_text']);
+	//create_to_delete_nodes_list($_POST['remove_node_id'],$_POST['remove_node_text']);
+	
+	
+	create_to_delete_nodes_list($_POST['subtree_to_remove']);
 	//node is deleted from js
 	//the new json will not have the node ?? - replace without saving?????????
 	

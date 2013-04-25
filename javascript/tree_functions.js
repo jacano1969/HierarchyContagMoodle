@@ -37,6 +37,7 @@ function remove() {
 	var rootStr = JSON.stringify(root);
 	var nodeStr = JSON.stringify(node);
 
+	var subtree_to_remove = JSON.stringify($('#tt').tree('getData', node.target));
 	var node_id = node.id;
 	var node_text = node.text;
 	if (rootStr != nodeStr) {
@@ -48,8 +49,7 @@ function remove() {
 			type : 'POST',
 			url : "ajax_calls.php",
 			data : {
-				"remove_node_id" : node_id,
-				"remove_node_text" : node_text
+				"subtree_to_remove" : subtree_to_remove
 			}
 			});
 		} else {

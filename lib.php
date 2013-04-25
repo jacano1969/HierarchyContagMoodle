@@ -257,6 +257,8 @@ function contag_add_custom_item($item_object, $item_type, $course_id) {
 function contag_delete_item($course_id, $item_key) {
 	// remove all related associations then del
 	global $DB;
+	
+	
 	list($item, $is_custom_resolution) = contag_find_item_from_item_key($item_key, $course_id, true, false);
 	if ($is_custom_resolution) {// error-checking - db-interface sync error if this fails (as there should *always* be a custom resolution for items we are deleting)
 		$DB -> delete_records('block_contag_association', array('item_type' => $item -> type, 'item_id' => $item -> id));
@@ -866,9 +868,6 @@ function import_json_to_db($json, $courseid) {
 				//echo "$key => $val\n";
 				$tag_id = contag_ensure_tag($courseid, $val, $tree_node_id, NULL);
 				$item = $DB -> get_record('block_contag_tag', array('id' => $tag_id));
-				echo $tag_id;
-				
-				
 				//normalized_url is NULL as it is not needed
 				if (!$tag_id) {
 					echo "Could not save: " . $val . "\n";
@@ -934,17 +933,30 @@ function append_node_to_json($contag_tag_object, $normalized_url) {
 	return $tree_node_id;
 }
 
-function create_to_delete_nodes_list($tree_node_id, $tree_node_text) {
 
-	$node = new_json_node($tree_node_id, $tree_node_text);
-	if (!isset($_SESSION['to_remove_nodes'])) {
-		$_SESSION['to_remove_nodes'] = array();
-	}
-	//an array of the ids to be removed
-	array_push($_SESSION['to_remove_nodes'], $node);
-	//echo "I am in here";
-	//print_r($_SESSION['to_remove_nodes']);
+function create_to_delete_nodes_list($subtree_to_remove)
+{
+
+	$jsonIterator = new RecursiveIteratorIterator(new RecursiveArrayIterator(json_decode($subtree_to_remove, TRUE)), RecursiveIteratorIterator::SELF_FIRST);
+
+	foreach ($jsonIterator as $key => $val) {
+		//gets the id first, and on next loop it gets the text
+		//for each id
+		if (strcmp($key, "id") == 0) {
+			$id = $val;
+		}
+		if (strcmp($key, "text") == 0) {
+			$text = $val;
+			$node = new_json_node($id, $text);
+			if (!isset($_SESSION['to_remove_nodes'])) {
+				$_SESSION['to_remove_nodes'] = array();
+			}
+			//an array of the ids to be removed
+				array_push($_SESSION['to_remove_nodes'], $node);
+			}
+		}
 }
+
 
 /*
  * Returns nodes the list with tree_nodes_ids of nodes to delete
@@ -976,9 +988,9 @@ function contag_delete_tags_from_tree_node_id($to_remove_nodes, $courseid) {
 		//print_r($node);
 		$tag_name = $node -> text;
 		$tree_node_id = $node -> id;
-		try{
-			$item =  $DB -> get_record('block_contag_tag', array('courde_id' => $courseid, 'tag_name' => $tag_name, 'tree_node_id' => $tree_node_id));
-	
+		try{			
+			$item =  $DB -> get_record('block_contag_tag', array('course_id' => $courseid, 'tag_name' => $tag_name, 'tree_node_id' => $tree_node_id));
+			contag_delete_tag($courseid, $item->id);
 		}
 		catch (Exception $e) {
     		echo 'Caught exception: ',  $e->getMessage(), "\n";
