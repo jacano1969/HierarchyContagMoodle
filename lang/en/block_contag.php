@@ -35,10 +35,13 @@ $string['viewingformpageheading'] = 'Navigate by Concept Tags';
 $string['table_concept_heading'] = "Concept";
 $string['table_items_heading'] = "Items Tagged with Concept";
 
-//Strings for edit.php
+//Strings for attach_tags.php
 $string['editingformheader'] = 'Edit and Associate Concept Tags';
 $string['editingformpageheading'] = 'Edit and Associate Concept Tags';
 
+//Strings for edit_tags.php
+$string['hierarchyformheader'] = 'Create Conceprs Hierarchy Tree';
+$string['hierarchyformpageheading'] = 'Create Concepts Hierarchy Tree';
 
 //marigianna imports 
 //for the links
@@ -55,5 +58,12 @@ $string['append'] = 'Append';
 $string['remove'] = 'Remove';
 $string['expand'] = 'Expand';
 $string['collapse'] = 'Collapse';
+
+//alert messages
+$string['concept_imported_to_tree'] = 'The concept has also been added to Concept Tagging Hierarchy tree. Edit the tree for changing the concept\'s hierarchy!';
+$string['ontology_saved'] = 'Concepts Hierarchy tree was saved successfully!';
+$string['ontology_not_saved']='Oops!! Something went wrong! Ontology was not saved.';
+$string['dublicates_not_allowed'] = 'Dublicate names are not allowed.Please change and save the ontology again';
+$string['malformed_url'] = 'Malformed URL: course id , json object or url are missing.'; 
 
 ?>

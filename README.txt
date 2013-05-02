@@ -19,6 +19,7 @@ CATALINA_HOME/lib/json/(siteurl)/(courseid) is on 777 permissions
 
 make sure that $WEB_SERVICE_URL in callOntologyCreationWS works, or change the URL respectively
 
+make sure from Moodle XMLDB and phpmyadmin that tree_node_id column (int) is added on the plugin's table block_contag_tag 
 
 Features
 --------

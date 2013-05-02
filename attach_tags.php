@@ -25,6 +25,7 @@
 
 require_once('../../config.php');
 require_once('lib.php');
+require_once('hierarchy_tree_lib.php');
 
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
@@ -86,8 +87,7 @@ if (in_array ($CONTAG_ASSOCIATE_BUTTON_NAME, $post_keys)) { // have they clicked
                     if (!empty($splittag)){
                         if (contag_validate_tag_name_as_good($splittag)){
                         	$normalized_url = normalize_url($CFG -> wwwroot);
-	
-							
+							//takes enter as save and makes circular inserts of a deleted association
                             contag_add_association($courseid, $splittag, $matches[1],$normalized_url); // matches[1] is unique item key
                         } else { // escape below to prevent injection
                             $an_error.="Error: invalid tagname: ".htmlspecialchars($splittag)." - your tag should only contain numbers, letters, any underscores (any spaces will be converted to underscores).";
@@ -117,12 +117,13 @@ $get_keys = array_keys($_GET);
 
 // if we have a 'unassociate' submission
 if (in_array ($CONTAG_UNASSOCIATE_KEY_NAME, $get_keys)){
-    contag_delete_association($courseid,$_GET['item_key'],$_GET['tag_id']); // it will silently ignore if not found
+    contag_delete_association($courseid,$_GET['item_key'],$_GET['tag_id']); // it will silently ignore if not found	
 }
 
 // if we have a 'delete tag' submission
 if (in_array ($CONTAG_DELETE_TAG_KEY_NAME, $get_keys)){
-    contag_delete_tag($courseid, $_GET['tag_id']); // it will silently ignore if not found
+    contag_delete_tag($courseid, $_GET['tag_id']); // it will silently ignore if not found    
+	
 }
 
 // if we have a rename event

@@ -23,6 +23,7 @@
 
 require_once ('../../config.php');
 require_once ('lib.php');
+require_once('hierarchy_tree_lib.php');
 
 /*lines for debugging code*/
 /*ini_set('display_errors',1);
@@ -75,7 +76,7 @@ require_js(array('yui_yahoo', 'yui_dom-event', 'yui_connection', 'yui_datasource
 /* DISPLAY THE PAGE */
 
 // Set up necessary strings
-$formheader = get_string('editingformheader', 'block_contag');
+$formheader = get_string('hierarchyformheader', 'block_contag');
 
 // Print page elements
 $navigation = build_navigation($formheader);
@@ -163,13 +164,6 @@ if (has_capability('block/contag:edit', $context)){ // can they edit hierarchy?
 		copy_from_server_to_local($courseid); //write locally for synchronizing dirs
 	}
 
-	//need to copy file locally from server
-	//in order to renew it its time. 
-	//$json_path_local = get_json_path_local();
-	//if (!copy_files($json_file_path, $json_path_local. 'json_' . $courseid . '.json') != 0) 
-	//{	
-		//die("Error. Could not create JSON file locally. \n");
-	//}
 
 /*url: '/marigianna/moodle/blocks/contag/json/tree_data.json'*/
 	?> <ul id="tt" class="easyui-tree" data-options="

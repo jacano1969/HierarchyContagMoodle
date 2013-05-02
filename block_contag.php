@@ -16,6 +16,7 @@
 
 
 require_once(dirname(__FILE__) . "/lib.php"); // with just lib.php, this was failing depending on where the block was being seen!
+require_once(dirname(__FILE__) . "/hierarchy_tree_lib.php"); //
 
 class block_contag extends block_base {
 

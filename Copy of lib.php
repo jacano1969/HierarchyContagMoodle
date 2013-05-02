@@ -22,9 +22,7 @@
  You can use contag_find_item_from_item_key with the appropriate flag(s) to resolve to the custom version of the item, if it exists.
  The item_id in the association table will ALWAYS refer to the custom-item-table id, not the resource/module-id etc
  */
- 
-require_once('hierarchy_tree_lib.php');
- 
+
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
@@ -311,7 +309,9 @@ function contag_ensure_tag($courseid, $tag_name, $tree_node_id, $normalized_url)
 			$contag_tag_object -> tree_node_id = $tree_node_id;
 		} else//if it is set from the attach_tags form
 		{
+
 			$contag_tag_object -> tree_node_id = append_node_to_json($contag_tag_object, $normalized_url);
+
 		}
 		try {
 			$tag_id = $DB -> insert_record('block_contag_tag', $contag_tag_object);
@@ -396,12 +396,14 @@ function contag_get_tag_from_tag_id($course_id, $tag_id) {
 //TODO: marigianna: also delete instances associations from RDF
 function contag_delete_tag($course_id, $tag_id) {
 	global $DB;
-
+	//throw new Exception($tag_id, 1);
+	echo "the tag_id is: ".$tag_id;
 	if (contag_get_tag_from_tag_id($course_id, $tag_id)) {// ERROR CHECK - does it exist (and in this course)?		
+		echo "i got in here!! :D ";
 		$DB -> delete_records('block_contag_association', array('tag_id' => $tag_id));
 		// delete associations (if any)
 		$DB -> delete_records('block_contag_tag', array('id' => $tag_id));
-		// delete tag itself	
+		// delete tag itself
 	}
 }
 
@@ -801,5 +803,233 @@ function contag_print_table($table, $return = false) {
 	echo $output;
 	return true;
 }
+
+/*
+ * Section added by marigianna87@gmail.com (Computer Science Department, University of Crete)
+ * Functions added for hierarchy feature
+ */
+
+/**
+ * Creates a new JSON file that will load an empty tree.
+ * The root of the tree is the course's name
+ *
+ * @param $json_file_path - the file's path on server e.g. "var/www/moodle/blocks/contag/json"
+ * @param $json_file_url - the file's absolute url e.g. "http://tsl7.csd.uoc.gr/marigianna/moodle/blocks/contag/edit_tags.php?id=2"
+ * @param $coursename - the course's name
+ */
+
+function write_to_json_file($content, $json_file_path) {
+	$fh = fopen($json_file_path, 'w') or die("can't open file");
+	fwrite($fh, $content);
+	fclose($fh);
+}
+
+/**
+ * Forms moodle's root url to a url without special characters
+ *
+ * @param the url
+ * @returns normalized string
+ */
+function normalize_url($url) {
+	return preg_replace('/[^a-zA-Z0-9]/s', '', $url);
+
+}
+
+function copy_files($src, $dest) {
+	$fsrc = fopen($src, 'r');
+	$fdest = fopen($dest, 'w+');
+	$len = stream_copy_to_stream($fsrc, $fdest);
+	fclose($fsrc);
+	fclose($fdest);
+	return $len;
+}
+
+function get_json_file_path($normalized_url, $courseid) {
+	$json_file_path = "/usr/share/tomcat7/lib/json/" . $normalized_url . '/' . $courseid . '/' . 'json_' . $courseid . '.json';
+	return $json_file_path;
+}
+
+function get_json_path_local() {
+	return getcwd() . '/json/';
+}
+
+function import_json_to_db($json, $courseid) {
+	global $DB;
+	$jsonIterator = new RecursiveIteratorIterator(new RecursiveArrayIterator(json_decode($json, TRUE)), RecursiveIteratorIterator::SELF_FIRST);
+
+	foreach ($jsonIterator as $key => $val) {
+		//gets the id first, and on next loop it gets the text
+		//for each id
+		if (strcmp($key, "id") == 0) {
+			$tree_node_id = $val;
+			continue;
+		}
+		//for each text
+		if (strcmp($key, "text") == 0) {
+			$cleaned_name = contag_clean_tag_input($val);
+			if (contag_validate_tag_name_as_good($cleaned_name)) {
+				//echo "$key => $val\n";
+				$tag_id = contag_ensure_tag($courseid, $val, $tree_node_id, NULL);
+				$item = $DB -> get_record('block_contag_tag', array('id' => $tag_id));
+				//normalized_url is NULL as it is not needed
+				if (!$tag_id) {
+					echo "Could not save: " . $val . "\n";
+				}
+			}
+			else {
+				echo "bad name on tag". $cleaned_name;
+			}
+		}
+	}
+}
+
+function json_file_get_max_id($json) {
+	global $DB;
+
+	$jsonIterator = new RecursiveIteratorIterator(new RecursiveArrayIterator(json_decode($json, TRUE)), RecursiveIteratorIterator::SELF_FIRST);
+	$max_id = -1;
+
+	foreach ($jsonIterator as $key => $val) {
+		//gets the id first, and on next loop it gets the text
+		//for each id
+		if (strcmp($key, "id") == 0) {
+			if ($val >= $max_id) {
+				$max_id = $val;
+			}
+		}
+	}
+
+	return $max_id;
+}
+
+function new_json_node($id, $text) {
+	//create new content
+	$content = new stdClass();
+	$content -> id = $id;
+	$content -> text = $text;
+	return $content;
+}
+
+function append_node_to_json($contag_tag_object, $normalized_url) {
+
+	$json_file_path = get_json_file_path($normalized_url, $contag_tag_object -> course_id);
+	$json = file_get_contents($json_file_path);
+
+	//compute new node id
+	$tree_node_id = json_file_get_max_id($json) + 1;
+	//gets max id PLUS 1 to make the next node
+	$content = new_json_node($tree_node_id, $contag_tag_object -> tag_name);
+
+	//insert new content to json
+	$json_arr = json_decode($json);
+	array_push($json_arr[0] -> children, $content);
+
+	//write to file
+	$content = json_encode($json_arr);
+	write_to_json_file($content, $json_file_path);
+	/*	$json_path_local = get_json_path_local();
+	if (!copy_files($json_file_path, $json_path_local . 'json_' . $contag_tag_object -> course_id . '.json') != 0) {
+		die("Error. Could not create JSON file locally. \n");
+	}*/
+	copy_from_server_to_local($contag_tag_object -> course_id);
+	
+	do_alert(get_string('concept_imported_to_tree', 'block_contag'));
+	
+	return $tree_node_id;
+}
+
+
+
+function do_alert($msg) 
+{
+        echo '<script type="text/javascript">alert("' . $msg . '"); </script>';
+}
+
+
+function create_to_delete_nodes_list($subtree_to_remove)
+{
+
+	$jsonIterator = new RecursiveIteratorIterator(new RecursiveArrayIterator(json_decode($subtree_to_remove, TRUE)), RecursiveIteratorIterator::SELF_FIRST);
+
+	foreach ($jsonIterator as $key => $val) {
+		//gets the id first, and on next loop it gets the text
+		//for each id
+		if (strcmp($key, "id") == 0) {
+			$id = $val;
+		}
+		if (strcmp($key, "text") == 0) {
+			$text = $val;
+			$node = new_json_node($id, $text);
+			if (!isset($_SESSION['to_remove_nodes'])) {
+				$_SESSION['to_remove_nodes'] = array();
+			}
+			//an array of the ids to be removed
+				array_push($_SESSION['to_remove_nodes'], $node);
+			}
+		}
+}
+
+
+/*
+ * Returns nodes the list with tree_nodes_ids of nodes to delete
+ * if we did not have any remove action, it returns null
+ * */
+
+function get_to_delete_nodes_list() {
+
+	if (isset($_SESSION['to_remove_nodes'])) {
+		return $_SESSION['to_remove_nodes'];
+	} else {
+		return NULL;
+	}
+}
+
+/**
+ * Deletes a node from the tree. This action includes:
+ * nodes that will be removed from json automatically
+ * delete assotiations on nodes and items
+ * remove instances from RDF (TODO)
+ * Unsets the to_remove_nodes session for further use
+ *
+ */
+function contag_delete_tags_from_tree_node_id($to_remove_nodes, $courseid) {
+
+	global $DB;
+
+	foreach ($to_remove_nodes as $node) {
+		//print_r($node);
+		$tag_name = $node -> text;
+		$tree_node_id = $node -> id;
+		try{			
+			$item =  $DB -> get_record('block_contag_tag', array('course_id' => $courseid, 'tag_name' => $tag_name, 'tree_node_id' => $tree_node_id));
+			contag_delete_tag($item->course_id, $item->id);
+		}
+		catch (Exception $e) {
+    		echo 'Caught exception: ',  $e->getMessage(), "\n";
+		}
+	}
+	unset($_SESSION['to_remove_nodes']);
+	//job is done. unset the session for further use
+
+}
+
+function delete_nodes_to_remove_list() {
+	unset($_SESSION['to_remove_nodes']);
+}
+
+
+function copy_from_server_to_local($courseid)
+{
+	global $CFG;
+	$normalized_url = normalize_url($CFG -> wwwroot);
+	$json_file_path = get_json_file_path($normalized_url, $courseid);
+	$json_path_local = get_json_path_local();
+	
+	if (!copy_files($json_file_path, $json_path_local . 'json_' . $courseid . '.json') != 0) {
+		die("Error. Could not create JSON file locally. \n");
+	}
+}
+
+
 
 ?>

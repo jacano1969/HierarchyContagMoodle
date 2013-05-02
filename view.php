@@ -34,6 +34,7 @@
 
 require_once('../../config.php');
 require_once('lib.php');
+require_once('hierarchy_tree_lib.php');
 
 
 // possible parameter names

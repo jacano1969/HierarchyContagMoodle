@@ -177,15 +177,16 @@ function tree_submitted() {
 
 	$.ajax({
 		type : 'POST',
-		url : "callOntologyCreationWS.php",
+		url : "submit_tree.php",
 		// data : "json=" + JSONstring
 		data : {
 			"json" : JSONstring,
 			"courseId" : courseIdJs,
 			"url" : urlJs
 		},
-		success : function() {
-			alert("Concepts Hierarchy tree was saved successfully!");
+		success : function(data) {
+			//alert("Concepts Hierarchy tree was saved successfully!");
+			alert(data);
 		},
 		error : function(result) {
 			alert('Oops!! Something went wrong!');
