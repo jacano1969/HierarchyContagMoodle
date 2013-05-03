@@ -77,6 +77,7 @@ $post_keys = array_keys($_POST);
 
 if (in_array ($CONTAG_ASSOCIATE_BUTTON_NAME, $post_keys)) { // have they clicked the add button/pressed enter in the text fields?
     // we have an add, do your thing
+   	$normalized_url = normalize_url($CFG -> wwwroot);
     foreach ($_POST as $key => $value){
         if (preg_match('/^'.$CONTAG_TAG_FIELD_NAME.'_(.*)$/', $key, $matches)){ // do we have a field?
             if (!empty($value)){ // does it have a value?
@@ -86,7 +87,7 @@ if (in_array ($CONTAG_ASSOCIATE_BUTTON_NAME, $post_keys)) { // have they clicked
                     $splittag = contag_clean_tag_input($splittag);
                     if (!empty($splittag)){
                         if (contag_validate_tag_name_as_good($splittag)){
-                        	$normalized_url = normalize_url($CFG -> wwwroot);
+                        
 							//takes enter as save and makes circular inserts of a deleted association
                             contag_add_association($courseid, $splittag, $matches[1],$normalized_url); // matches[1] is unique item key
                         } else { // escape below to prevent injection
@@ -97,6 +98,10 @@ if (in_array ($CONTAG_ASSOCIATE_BUTTON_NAME, $post_keys)) { // have they clicked
             }
         }
     }
+
+	//associations were created. make the corresponding RDF (instances) 
+	//create the file
+	create_rdf_instances($courseid,$normalized_url);
  }
 
 // CUSTOM ITEMS

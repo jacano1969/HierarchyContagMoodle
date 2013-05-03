@@ -1,1 +1,1 @@
-[{"id":1,"text":"Άλγεβρα","checked":false,"state":"open","children":[{"id":2,"text":"salata","checked":false}]}]
+[{"id":1,"text":"Άλγεβρα","checked":false,"state":"open","children":[{"id":2,"text":"salata","checked":false,"state":"open","children":[{"id":3,"text":"ntomatosalata","checked":false},{"id":4,"text":"patatosalat","checked":false},{"id":5,"text":"taramosalata","checked":false}]}]}]

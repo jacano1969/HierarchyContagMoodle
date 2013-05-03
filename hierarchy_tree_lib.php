@@ -21,10 +21,12 @@
  * Functions added for Hierarchy Tree feature
  */
 
-require_once('lib.php');
+require_once ('lib.php');
 
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
+
+$WEB_SERVICE_URL = 'http://83.212.115.211:8080/HierarchyServices/rest/createinstances';
 
 /**
  * Creates a new JSON file that will load an empty tree.
@@ -77,12 +79,9 @@ function get_json_path_local() {
  */
 function import_json_to_db($json, $courseid) {
 	global $DB;
-	
 
 	$jsonIterator = new RecursiveIteratorIterator(new RecursiveArrayIterator(json_decode($json, TRUE)), RecursiveIteratorIterator::SELF_FIRST);
 
-
-	
 	foreach ($jsonIterator as $key => $val) {
 		//gets the id first, and on next loop it gets the text
 		//for each id
@@ -101,9 +100,8 @@ function import_json_to_db($json, $courseid) {
 				if (!$tag_id) {
 					echo "Could not save: " . $val . "\n";
 				}
-			}
-			else {
-				echo "Bad name on tag". $cleaned_name;
+			} else {
+				echo "Bad name on tag" . $cleaned_name;
 			}
 		}
 	}
@@ -136,7 +134,6 @@ function new_json_node($id, $text) {
 	return $content;
 }
 
-
 /*
  * Appends the new concept tag from association form to json
  * The tag is appended under the root. User needs to go and move the node on the desirable order
@@ -161,20 +158,15 @@ function append_node_to_json($contag_tag_object, $normalized_url) {
 	write_to_json_file($content, $json_file_path);
 	copy_from_server_to_local($contag_tag_object -> course_id);
 	do_alert(get_string('concept_imported_to_tree', 'block_contag'));
-	
+
 	return $tree_node_id;
 }
 
-
-
-function do_alert($msg) 
-{
-        echo '<script type="text/javascript">alert("' . $msg . '"); </script>';
+function do_alert($msg) {
+	echo '<script type="text/javascript">alert("' . $msg . '"); </script>';
 }
 
-
-function create_to_delete_nodes_list($subtree_to_remove)
-{
+function create_to_delete_nodes_list($subtree_to_remove) {
 
 	$jsonIterator = new RecursiveIteratorIterator(new RecursiveArrayIterator(json_decode($subtree_to_remove, TRUE)), RecursiveIteratorIterator::SELF_FIRST);
 
@@ -191,11 +183,10 @@ function create_to_delete_nodes_list($subtree_to_remove)
 				$_SESSION['to_remove_nodes'] = array();
 			}
 			//an array of the ids to be removed
-				array_push($_SESSION['to_remove_nodes'], $node);
-			}
+			array_push($_SESSION['to_remove_nodes'], $node);
 		}
+	}
 }
-
 
 /*
  * Returns nodes the list with tree_nodes_ids of nodes to delete
@@ -227,12 +218,11 @@ function contag_delete_tags_from_tree_node_id($to_remove_nodes, $courseid) {
 		//print_r($node);
 		$tag_name = $node -> text;
 		$tree_node_id = $node -> id;
-		try{			
-			$item =  $DB -> get_record('block_contag_tag', array('course_id' => $courseid, 'tag_name' => $tag_name, 'tree_node_id' => $tree_node_id));
-			contag_delete_tag($item->course_id, $item->id);
-		}
-		catch (Exception $e) {
-    		echo 'Caught exception: ',  $e->getMessage(), "\n";
+		try {
+			$item = $DB -> get_record('block_contag_tag', array('course_id' => $courseid, 'tag_name' => $tag_name, 'tree_node_id' => $tree_node_id));
+			contag_delete_tag($item -> course_id, $item -> id);
+		} catch (Exception $e) {
+			echo 'Caught exception: ', $e -> getMessage(), "\n";
 		}
 	}
 	unset($_SESSION['to_remove_nodes']);
@@ -244,29 +234,26 @@ function delete_nodes_to_remove_list() {
 	unset($_SESSION['to_remove_nodes']);
 }
 
-
-function copy_from_server_to_local($courseid)
-{
+function copy_from_server_to_local($courseid) {
 	global $CFG;
 	$normalized_url = normalize_url($CFG -> wwwroot);
 	$json_file_path = get_json_file_path($normalized_url, $courseid);
 	$json_path_local = get_json_path_local();
-	
+
 	if (!copy_files($json_file_path, $json_path_local . 'json_' . $courseid . '.json') != 0) {
 		die("Error. Could not create JSON file locally. \n");
 	}
 }
 
-
 /**
- * Checks if an array has dublicate values  
+ * Checks if an array has dublicate values
  * @param the json as string
  * @return bollean
  */
 function array_has_duplicates($json_array) {
-	
+
 	$text_array = array();
-	
+
 	$jsonIterator = new RecursiveIteratorIterator(new RecursiveArrayIterator(json_decode($json_array, TRUE)), RecursiveIteratorIterator::SELF_FIRST);
 
 	//creates an array with the text of the json object
@@ -276,11 +263,48 @@ function array_has_duplicates($json_array) {
 			continue;
 		}
 	}
-	
+
 	//checkes this array for duplicates
-	
-   return count($text_array) != count(array_unique($text_array));
+
+	return count($text_array) != count(array_unique($text_array));
 }
 
+/**
+ *
+ */
 
+function create_rdf_instances($courseid, $normalized_url) {
+
+	$json_str= create_instances_json();
+	// $encode_parameters = $normalized_url . "/" . $courseid . "/" . $instances_json;
+	// $call_web_service_url = $WEB_SERVICE_URL . "/" . $encode_parameters;
+	// $resp = file_get_contents($call_web_service_url);
+	// if (strcmp($resp, "true") == 0) {
+	// echo "Instances created successfully";
+	// } else {
+	// echo "Oops. Something went wrong. Instances were not created. Please try again";
+	// }
+}
+
+/**
+ * Reads from database and creates a json that describes the relationships and contains the tree node id which is 
+ * required information for the RDF database
+ * @returns the json_str 
+ */
+function create_instances_json() {
+	global $DB;
+
+	$sql = "SELECT A.id as association_id,T.tree_node_id , A.item_id
+			FROM mdl_block_contag_tag T
+			INNER JOIN mdl_block_contag_association A
+			ON T.id=A.tag_id
+			ORDER BY association_id";
+	
+	//get result PHP object
+	$result = $DB -> get_records_sql($sql); //records makes a sorting based on first column, in order to have unique appearances of an id
+	//make array a json
+	$json_str = json_encode($result);
+	return $json_str ;
+
+}
 ?>
