@@ -27,7 +27,7 @@ ini_set('display_errors', '1');
 
 //$WEB_SERVICE_URL = 'http://tsl7.csd.uoc.gr:8080/HierarchyServices/rest/createontology';
 
-$WEB_SERVICE_URL = 'http://83.212.115.211:8080/HierarchyServices/rest/createontology';
+$WEB_SERVICE_URL = 'http://83.212.123.121:8080/HierarchyServices/rest/createontology';
 /* ConTag Hierarchy Tree - Ontology creation
  * This is the file that calls the web service
  * with the corresponding JSON object

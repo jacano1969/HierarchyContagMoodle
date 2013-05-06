@@ -26,7 +26,7 @@ require_once ('lib.php');
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
-$WEB_SERVICE_URL = 'http://83.212.115.211:8080/HierarchyServices/rest/createinstances';
+$WEB_SERVICE_URL = 'http://83.212.123.121:8080/HierarchyServices/rest/createinstances';
 
 /**
  * Creates a new JSON file that will load an empty tree.
@@ -270,27 +270,34 @@ function array_has_duplicates($json_array) {
 }
 
 /**
+ * Reads from database and creates a json that describes the relationships and contains the tree node id which is
+ * required information for the RDF database
+ * @returns the json_str
+ */
+
+/**
  *
  */
 
 function create_rdf_instances($courseid, $normalized_url) {
+	global $WEB_SERVICE_URL;
+	$json_str = create_instances_json();
+	
+	$url = urlencode($normalized_url);
+	$courseid = urlencode($courseid);
+	$json = urlencode($json_str);
+	$encode_parameters = $url . "/" . $courseid . "/" . $json;
 
-	$json_str= create_instances_json();
-	// $encode_parameters = $normalized_url . "/" . $courseid . "/" . $instances_json;
-	// $call_web_service_url = $WEB_SERVICE_URL . "/" . $encode_parameters;
-	// $resp = file_get_contents($call_web_service_url);
-	// if (strcmp($resp, "true") == 0) {
-	// echo "Instances created successfully";
-	// } else {
-	// echo "Oops. Something went wrong. Instances were not created. Please try again";
-	// }
+	$call_web_service_url = $WEB_SERVICE_URL . "/" . $encode_parameters;
+	
+	$resp = file_get_contents($call_web_service_url);
+	if (strcmp($resp, "true") == 0) {
+		echo "Instances created successfully";
+	} else {
+		echo "Oops. Something went wrong. Instances were not created. Please try again";
+	}
 }
 
-/**
- * Reads from database and creates a json that describes the relationships and contains the tree node id which is 
- * required information for the RDF database
- * @returns the json_str 
- */
 function create_instances_json() {
 	global $DB;
 
@@ -299,12 +306,16 @@ function create_instances_json() {
 			INNER JOIN mdl_block_contag_association A
 			ON T.id=A.tag_id
 			ORDER BY association_id";
-	
+
 	//get result PHP object
-	$result = $DB -> get_records_sql($sql); //records makes a sorting based on first column, in order to have unique appearances of an id
+	$result = $DB -> get_records_sql($sql);
+	//records makes a sorting based on first column, in order to have unique appearances of an id
 	//make array a json
 	$json_str = json_encode($result);
-	return $json_str ;
+
+	return $json_str;
 
 }
+
+
 ?>

@@ -90,7 +90,8 @@ if (in_array ($CONTAG_ASSOCIATE_BUTTON_NAME, $post_keys)) { // have they clicked
                         
 							//takes enter as save and makes circular inserts of a deleted association
                             contag_add_association($courseid, $splittag, $matches[1],$normalized_url); // matches[1] is unique item key
-                        } else { // escape below to prevent injection
+    						create_rdf_instances($courseid, $normalized_url);                    
+						} else { // escape below to prevent injection
                             $an_error.="Error: invalid tagname: ".htmlspecialchars($splittag)." - your tag should only contain numbers, letters, any underscores (any spaces will be converted to underscores).";
                         }
                     }
