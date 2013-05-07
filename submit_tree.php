@@ -71,6 +71,9 @@ if (isset($_POST["json"]) && isset($_POST["courseId"])) {
 
 			//echo "Concepts Hierarchy tree was saved successfully! \n";
 			echo get_string('ontology_saved', 'block_contag');
+			
+			create_rdf_instances($courseid, $url);                    
+			
 			unset($_POST["url"]);
 			unset($_POST["courseId"]);
 			unset($_POST["json"]);

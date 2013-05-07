@@ -48,7 +48,7 @@ $CONTAG_DELETE_CUSTOM_ITEM_KEY_NAME = 'del_custom_item';
 //new tags added by *marigianna - C.S.D. U.O.C.
 //$CONTAG_JSON_PATH_SERVER =  "/usr/share/tomcat7/lib/json";
 //$CONTAG_JSON_PATH_LOCAL = getcwd().'/json/';
-$CONTAG_JSON_URL = $CFG -> wwwroot . '/blocks/contag/json/';
+$CONTAG_JSON_URL = $CFG -> wwwroot . '/blocks/contag/json';
 
 //$WEB_SERVICE_URL = 'http://tsl7.csd.uoc.gr:8080/HierarchyServices/rest/createontology';
 
@@ -153,13 +153,15 @@ if (has_capability('block/contag:edit', $context)){ // can they edit hierarchy?
 	$json_file_path = get_json_file_path($normalized_url,$courseid);
 
 
-	$json_file_url = $CONTAG_JSON_URL .'json_' . $courseid . '.json';
+	$json_file_url = $CONTAG_JSON_URL .'/json_' . $courseid . '.json';
 	//check if file exists or create
 	//throw new Exception($normalized_url);
 	
-	if (!file_exists($json_file_path)) {
+	if (!file_exists($json_file_path)) {		
 		$content = "[{\"id\":1,\"text\":\"" . $course -> fullname . "\"}]";
+		
 		write_to_json_file($content,$json_file_path, $course -> fullname);	//write to server
+		
 		
 		copy_from_server_to_local($courseid); //write locally for synchronizing dirs
 	}

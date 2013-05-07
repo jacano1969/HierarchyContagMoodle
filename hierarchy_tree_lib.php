@@ -38,9 +38,13 @@ $WEB_SERVICE_URL = 'http://83.212.123.121:8080/HierarchyServices/rest/createinst
  */
 
 function write_to_json_file($content, $json_file_path) {
+
+
 	$fh = fopen($json_file_path, 'w') or die("can't open file");
-	fwrite($fh, $content);
-	fclose($fh);
+	 fwrite($fh, $content);
+	 fclose($fh);
+	 chmod($json_file_path, 0777);
+	
 }
 
 /**
@@ -64,6 +68,9 @@ function copy_files($src, $dest) {
 }
 
 function get_json_file_path($normalized_url, $courseid) {
+	//creates the file directory if it does not exist
+	make_path("/usr/share/tomcat7/lib/json/" . $normalized_url . '/' . $courseid);
+	
 	$json_file_path = "/usr/share/tomcat7/lib/json/" . $normalized_url . '/' . $courseid . '/' . 'json_' . $courseid . '.json';
 	return $json_file_path;
 }
@@ -282,20 +289,22 @@ function array_has_duplicates($json_array) {
 function create_rdf_instances($courseid, $normalized_url) {
 	global $WEB_SERVICE_URL;
 	$json_str = create_instances_json();
-	
+
 	$url = urlencode($normalized_url);
 	$courseid = urlencode($courseid);
 	$json = urlencode($json_str);
 	$encode_parameters = $url . "/" . $courseid . "/" . $json;
 
 	$call_web_service_url = $WEB_SERVICE_URL . "/" . $encode_parameters;
-	
+
 	$resp = file_get_contents($call_web_service_url);
-	if (strcmp($resp, "true") == 0) {
-		echo "Instances created successfully";
+	//do not return messages
+	/*if (strcmp($resp, "true") == 0) {
+		do_alert("Associations created successfully");
+
 	} else {
-		echo "Oops. Something went wrong. Instances were not created. Please try again";
-	}
+		do_alert("Oops. Something went wrong. Instances were not created. Please try again");
+	}*/
 }
 
 function create_instances_json() {
@@ -317,5 +326,11 @@ function create_instances_json() {
 
 }
 
-
+function make_path($path) {
+	//Test if path exist
+	if (is_dir($path) || file_exists($path))
+		return;
+	//No, create it
+	mkdir($path, 0777, true);
+}
 ?>
