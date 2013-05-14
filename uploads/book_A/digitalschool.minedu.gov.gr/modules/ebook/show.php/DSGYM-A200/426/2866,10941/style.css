@@ -1,0 +1,458 @@
+@charset "utf-8";
+/* reset styles*/
+p, h1, h2, h3, th {
+	padding:0;
+	margin:0;
+}
+h1, h2, h3 {
+	font-style:normal;
+	font-weight:normal;
+}
+img {
+	vertical-align:middle;
+}
+td {
+	vertical-align:top;
+}
+ul {
+	margin-bottom:0;
+	margin-top:0;
+}
+a {
+	color:#009;
+	text-decoration:none;
+}
+a:hover {
+	color:#00F;
+	text-decoration:underline;
+}
+body {
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color:#333;
+	line-height: 180%;
+	text-align:justify;
+	background-color: #ebebeb;
+}
+.wrapper {
+	background-color:#FFFFFF;
+	border:none;
+	margin: 0 auto;
+	width: 900px;
+	padding:10px;
+}
+.headline {
+	background:url(images/tmpl_headline_bgrnd.jpg) center bottom no-repeat;
+	text-align:right;
+	font-style:oblique;
+	color:#666;
+	padding:0 40px 10px 0;
+}
+.theory, .introA7, .introB2 {
+	width:100%;
+}
+.introA1 {
+	background-color:#fcf7f1;
+}
+.introA1 h1 {
+	color:#db692e;
+	background-color:#e6d3a5;
+	margin:0 0 10px 0;
+	padding:2px 10px;
+	font-size:150%;
+	font-style:normal;
+}
+.introA1 p {
+	color:#000;
+	font-weight:bold;
+}
+.introA1 ul li {
+	list-style-image:url(images/tmpl_bullet_brown.png);
+	font-style:oblique;
+}
+.introA7 {
+	background-color:#b8957f;
+}
+.introA7 h1 {
+	color:#b8423e;
+	background-color:#e4ce99;
+	margin:0 0 10px 0;
+	padding:2px 10px;
+	font-size:150%;
+	font-style:normal;
+}
+.introA7 p {
+	color:#FFF;
+	font-weight:bold;
+}
+.introA7 ul li {
+	list-style-image:url(images/tmpl_orange_bullet1.html);
+	font-style:oblique;
+}
+
+.introA6 {
+	background-color:#fcf7f1;
+}
+.introA6 p {
+	color:#019ebb;
+	font-weight:bold;
+}
+.introA6 h1 {
+	color:#db692e;
+	background-color:#e6d3a5;
+	margin:0 0 10px 0;
+	padding:2px 10px;
+	font-size:150%;
+	font-style:normal;
+}
+.introA6 ul li {
+	list-style-image:url(images/tmpl_bullet_cyan.png);
+	font-style:oblique;
+}.introB1 {
+	background-color:#fcf7f1;
+}
+.introB1 p {
+	color:#d06872;
+	font-weight:bold;
+}
+.introB1 h1 {
+	background-color:#e49e85;
+	margin:0 0 10px 0;
+	padding:2px 10px;
+	font-size:150%;
+	font-style:normal;
+}
+.introB1 ul li {
+	list-style-image:url(images/tmpl_bullet_pink.png);
+	font-style:oblique;
+}
+.introB2 {
+	background-color:#dde1e4;
+}
+.introB2 h1 {
+	color:#000;
+	background-color:#e4ce99;
+	margin:0 0 10px 0;
+	padding:2px 10px;
+	font-size:150%;
+	font-style:normal;
+}
+.introB2 p {
+	color:#018dc8;
+	font-weight:bold;
+}
+.introB2 ul li {
+	list-style-image:url(images/tmpl_orange_bullet2.gif);
+	font-style:oblique;
+}
+.introB3 {
+	background-color: #FEF2E2;
+}
+.introB3 h1 {
+	background-color: #F2B6AC;
+	color: #EA0D8C;
+	font-size: 150%;
+	font-style: normal;
+	margin: 0 0 10px;
+	padding: 2px 10px;
+}
+.introB3 p {
+	color: #018DC8;
+	font-weight: bold;
+}
+.introB3 ul li {
+	font-style: oblique;
+	list-style-image: url("images/tmpl_orange_bullet3.gif");
+}
+.subtitle {
+	background-color: #e3dbc9;
+	font-size:20px;
+}
+.subtext {
+	font-family:"Comic Sans MS", cursive;
+	font-style:oblique;
+	font-size:16px;
+	line-height: 120%;
+	color:#064;
+}
+.activity-title {
+	background:url(images/tmpl_bgrnd_drast.jpg) no-repeat;
+	padding: 0 0 0 30px;
+	vertical-align:middle;
+	font-size:18px;
+	font-style:oblique;
+	height:38px;
+}
+.example-title {
+	background:url(images/tmpl_example_bgrnd.jpg) no-repeat;
+	padding-left:30px;
+	vertical-align:middle;
+	font-size:18px;
+	font-style:oblique;
+	height:38px;
+}
+.home-title {
+	background:url(images/tmpl_homeact_bgrnd.jpg) no-repeat;
+	padding-left:30px;
+	vertical-align:middle;
+	font-size:18px;
+	font-style:oblique;
+	height:38px;
+}
+.exercise-title {
+	background:url(images/tmpl_bgrnd_exercise.jpg) no-repeat;
+	padding-left:30px;
+	vertical-align:middle;
+	font-size:18px;
+	font-style:oblique;
+	height:38px;
+}
+.historical-title {
+	background:url(images/tmpl_bgrnd_title_hist.jpg) no-repeat;
+	padding-left:30px;
+	vertical-align:middle;
+	font-size:18px;
+	font-style:oblique;
+	height:38px;
+}
+.project-title {
+	background:url(images/tmpl_bgrnd_title_project.jpg) no-repeat;
+	padding-left:30px;
+	vertical-align:middle;
+	font-size:18px;
+	font-style:oblique;
+	height:38px;
+}
+.activity {
+	font-style:oblique;
+}
+.thinking {
+	font-style:normal;
+}
+.thinking-title {
+	background:url(images/tmpl_thinking_title.jpg) no-repeat;
+	padding-left:50px;
+	font-family:"Comic Sans MS", cursive;
+	font-size:20px;
+	height:42px;
+	vertical-align:bottom;
+}
+.think-learn {
+	background-color:#e7f6fd;
+}
+.think-learn-title {
+	font-family:"Comic Sans MS", cursive;
+	font-size:20px;
+	color:#fcee21;
+	background:#c42026;
+}
+.think-learn-subtitle {
+	font-size:24px;
+	color:#900;
+}
+.solution-text {
+	font-style:normal;
+}
+.soltext {
+	color:#019ebb;
+	font-family:"Comic Sans MS", cursive;
+	font-size:16px;
+	font-style:oblique;
+}
+.example {
+	border:1px solid #000;
+	color:#F00;
+	text-align:center;
+	background-color:#fef8c2;
+	font-weight:bold;
+	padding:2px;
+	margin:0;
+}
+.tdorange {
+	background-color:#ffe4b9;
+	text-align:center;
+	font-style:normal;
+	min-width:40px;
+}
+.tdblue {
+	background-color:#d1eefc;
+	text-align:center;
+	font-style:normal;
+	min-width:40px;
+}
+.tdpink {
+	background-color:#e9cac8;
+	text-align:center;
+	font-style:normal;
+	min-width:40px;
+}
+.tdlgreen {
+	background-color:#f1f5d5;
+	text-align:center;
+	font-style:normal;
+	min-width:40px;
+}
+.tdgreen {
+	background-color:#d9eddd;
+	text-align:center;
+	font-style:normal;
+	min-width:40px;
+}
+.boxtf {
+	background:url(images/tmpl_box.jpg) center no-repeat;
+	border:1px solid #000;
+	width:52px;
+}
+.blueheadline {
+	text-align:center;
+	font-family:"Comic Sans MS", cursive;
+	font-size:18px;
+	color:#019ebb;
+}
+.redheadline {
+	font-family:"Comic Sans MS", cursive;
+	font-size:18px;
+	color:#ec2027;
+}
+.soltext-nocolor {
+	font-family:"Comic Sans MS", cursive;
+	font-size:16px;
+	font-style:oblique;
+}
+.solredtext {
+	color:#f00;
+	font-family:"Comic Sans MS", cursive;
+	font-size:16px;
+	font-style:normal;
+}
+.repexamhead {
+	background-color:#ec2027;
+	text-align:center;
+	font-family:"Comic Sans MS", cursive;
+	font-size:24px;
+	color:#FFF;
+}
+.repexamsubhead {
+	font-family:"Comic Sans MS", cursive;
+	font-size:24px;
+	color:#019ebb;
+	margin:10px 0;
+}
+.activityInClass {
+	font-style:oblique;
+	color:#c42027;
+	background-color:#e1b7b6;
+	font-size:18px;
+}
+.subtext.inClass {
+	font-family:"Comic Sans MS", cursive;
+	font-style:oblique;
+	font-size:16px;
+	line-height: 120%;
+	color:#000;
+	background-color:#fee7a7;
+}
+.center {
+	text-align:center;
+}
+.right {
+	text-align:right;
+}
+.left {
+	text-align:left;
+}
+.fr {
+	float:right;
+}
+.fl {
+	float:left;
+}
+.full {
+	width:100%;
+}
+table.border1black td {
+	border:1px solid #000;
+}
+table.table_noborder {
+	border-spacing:0;
+	border-collapse:collapse;
+}
+table.table_noborder td {
+	padding:6px;
+}
+.greenbook {
+	background: url(images/tmpl_bgrnd_greenbook.jpg) repeat-y;
+	padding:10px 30px 10px 30px;
+}
+.anak-head1 {
+	background:url(images/tmpl_anak02.gif) repeat-x;
+	text-align:center;
+	padding-right:125px;
+	padding-top:30px;
+	color:#FFF;
+	font-family:"Comic Sans MS", cursive;
+	font-size:36px;
+}
+.anak-head2 {
+	color:#4c9bc9;
+	font-family:"Comic Sans MS", cursive;
+	font-size:24px;
+	text-align:center;
+	margin-bottom:10px;
+}
+.anak-head3 {
+	color:#019ebb;
+	font-family:"Comic Sans MS", cursive;
+	font-size:18px;
+	text-align:center;
+}
+.anak-head4 {
+	color:#4c9bc9;
+	font-family:"Comic Sans MS", cursive;
+	font-size:24px;
+	text-align:left;
+}
+/**/
+.list-cyan-arrow {
+	list-style-image:url(images/tmpl_bullet_cyan.jpg);
+}
+.list-olive-arrow {
+	list-style-image:url(images/tmpl_bullet_olive.jpg);
+}
+.list-red-bullet1 {
+	list-style-image:url(images/tmpl_bullet_red1.png);
+}
+.list-red-bullet2 {
+	list-style-image:url(images/tmpl_bullet_red2.png);
+}
+.list-green-bullet1 {
+	list-style-image:url(images/tmpl_bullet_green1.png);
+}
+.list-blue-arrow {
+	list-style-image:url(images/tmpl_bullet_blue1.png);
+}
+.list-blue-diamond {
+	list-style-image:url(images/tmpl_think_lblue_bullet.jpg);
+}
+.list-blue-diamond-no-background {
+	list-style-image:url(images/tmpl_blue_bullet.jpg);
+}
+
+.history-title {
+	background:url(images/tmpl_historyact_bgrnd.jpg) no-repeat;
+	padding: 0 0 0 30px;
+	vertical-align:middle;
+	font-size:18px;
+	font-style:oblique;
+	height:38px;
+}
+.calculator_font{
+	font-family:"Comic Sans MS", cursive;	
+	font-size:18px;	
+}
+.red {
+	color:#ec2027;
+}
+.blue {
+	color:#019ebb;
+}

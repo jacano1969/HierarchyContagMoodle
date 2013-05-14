@@ -1,0 +1,839 @@
+PHPUnit 3.6.11 by Sebastian Bergmann.
+
+Configuration read from C:\xampp\htdocs\mdl24\question\type\gapfill\phpunit.xml
+
+.make_questionarray(2) {
+  [0]=>
+  string(3) "cat"
+  [1]=>
+  string(3) "mat"
+}
++++++++++++++++array(2) {
+  [0]=>
+  object(question_answer)#12289 (6) {
+    ["id"]=>
+    int(43)
+    ["answer"]=>
+    string(3) "cat"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+  [1]=>
+  object(question_answer)#10739 (6) {
+    ["id"]=>
+    int(44)
+    ["answer"]=>
+    string(3) "mat"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+}
+----------------.make_questionarray(2) {
+  [0]=>
+  string(3) "cat"
+  [1]=>
+  string(3) "mat"
+}
++++++++++++++++array(2) {
+  [0]=>
+  object(question_answer)#10740 (6) {
+    ["id"]=>
+    int(43)
+    ["answer"]=>
+    string(3) "cat"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+  [1]=>
+  object(question_answer)#10739 (6) {
+    ["id"]=>
+    int(44)
+    ["answer"]=>
+    string(3) "mat"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+}
+----------------.make_questionarray(2) {
+  [0]=>
+  string(3) "cat"
+  [1]=>
+  string(3) "mat"
+}
++++++++++++++++array(2) {
+  [0]=>
+  object(question_answer)#12289 (6) {
+    ["id"]=>
+    int(43)
+    ["answer"]=>
+    string(3) "cat"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+  [1]=>
+  object(question_answer)#10739 (6) {
+    ["id"]=>
+    int(44)
+    ["answer"]=>
+    string(3) "mat"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+}
+----------------.make_questionarray(2) {
+  [0]=>
+  string(3) "cat"
+  [1]=>
+  string(3) "mat"
+}
++++++++++++++++array(2) {
+  [0]=>
+  object(question_answer)#10740 (6) {
+    ["id"]=>
+    int(43)
+    ["answer"]=>
+    string(3) "cat"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+  [1]=>
+  object(question_answer)#10739 (6) {
+    ["id"]=>
+    int(44)
+    ["answer"]=>
+    string(3) "mat"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+}
+----------------string(3) "cat"
+string(3) "mat"
+string(3) "cat"
+string(3) "mat"
+..make_questionarray(2) {
+  [0]=>
+  string(3) "cat"
+  [1]=>
+  string(3) "mat"
+}
++++++++++++++++array(2) {
+  [0]=>
+  object(question_answer)#12289 (6) {
+    ["id"]=>
+    int(43)
+    ["answer"]=>
+    string(3) "cat"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+  [1]=>
+  object(question_answer)#10739 (6) {
+    ["id"]=>
+    int(44)
+    ["answer"]=>
+    string(3) "mat"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+}
+----------------.make_questionarray(2) {
+  [0]=>
+  string(3) "cat"
+  [1]=>
+  string(3) "mat"
+}
++++++++++++++++array(2) {
+  [0]=>
+  object(question_answer)#10740 (6) {
+    ["id"]=>
+    int(43)
+    ["answer"]=>
+    string(3) "cat"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+  [1]=>
+  object(question_answer)#10739 (6) {
+    ["id"]=>
+    int(44)
+    ["answer"]=>
+    string(3) "mat"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+}
+----------------.make_questionarray(2) {
+  [0]=>
+  string(3) "cat"
+  [1]=>
+  string(3) "mat"
+}
++++++++++++++++array(2) {
+  [0]=>
+  object(question_answer)#12289 (6) {
+    ["id"]=>
+    int(43)
+    ["answer"]=>
+    string(3) "cat"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+  [1]=>
+  object(question_answer)#10739 (6) {
+    ["id"]=>
+    int(44)
+    ["answer"]=>
+    string(3) "mat"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+}
+----------------.make_questionarray(2) {
+  [0]=>
+  string(3) "cat"
+  [1]=>
+  string(3) "mat"
+}
++++++++++++++++array(2) {
+  [0]=>
+  object(question_answer)#10740 (6) {
+    ["id"]=>
+    int(43)
+    ["answer"]=>
+    string(3) "cat"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+  [1]=>
+  object(question_answer)#10739 (6) {
+    ["id"]=>
+    int(44)
+    ["answer"]=>
+    string(3) "mat"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+}
+----------------string(3) "cat"
+string(3) "cat"
+string(3) "cat"
+string(3) "cat"
+.make_questionarray(2) {
+  [0]=>
+  string(3) "cat"
+  [1]=>
+  string(3) "mat"
+}
++++++++++++++++array(2) {
+  [0]=>
+  object(question_answer)#12289 (6) {
+    ["id"]=>
+    int(43)
+    ["answer"]=>
+    string(3) "cat"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+  [1]=>
+  object(question_answer)#10739 (6) {
+    ["id"]=>
+    int(44)
+    ["answer"]=>
+    string(3) "mat"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+}
+----------------.make_questionarray(2) {
+  [0]=>
+  string(3) "cat"
+  [1]=>
+  string(3) "mat"
+}
++++++++++++++++array(2) {
+  [0]=>
+  object(question_answer)#10740 (6) {
+    ["id"]=>
+    int(43)
+    ["answer"]=>
+    string(3) "cat"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+  [1]=>
+  object(question_answer)#10739 (6) {
+    ["id"]=>
+    int(44)
+    ["answer"]=>
+    string(3) "mat"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+}
+----------------.....make_questionarray(2) {
+  [0]=>
+  string(3) "cat"
+  [1]=>
+  string(3) "mat"
+}
++++++++++++++++array(2) {
+  [0]=>
+  object(question_answer)#10742 (6) {
+    ["id"]=>
+    int(43)
+    ["answer"]=>
+    string(3) "cat"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+  [1]=>
+  object(question_answer)#10743 (6) {
+    ["id"]=>
+    int(44)
+    ["answer"]=>
+    string(3) "mat"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+}
+----------------.make_questionarray(2) {
+  [0]=>
+  string(3) "cat"
+  [1]=>
+  string(3) "mat"
+}
++++++++++++++++array(2) {
+  [0]=>
+  object(question_answer)#10768 (6) {
+    ["id"]=>
+    int(43)
+    ["answer"]=>
+    string(3) "cat"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+  [1]=>
+  object(question_answer)#10769 (6) {
+    ["id"]=>
+    int(44)
+    ["answer"]=>
+    string(3) "mat"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+}
+----------------string(3) "cat"
+string(3) "mat"
+.make_questionarray(2) {
+  [0]=>
+  string(3) "cat"
+  [1]=>
+  string(3) "mat"
+}
++++++++++++++++array(2) {
+  [0]=>
+  object(question_answer)#10768 (6) {
+    ["id"]=>
+    int(43)
+    ["answer"]=>
+    string(3) "cat"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+  [1]=>
+  object(question_answer)#10769 (6) {
+    ["id"]=>
+    int(44)
+    ["answer"]=>
+    string(3) "mat"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+}
+----------------string(3) "cat"
+string(3) "mat"
+.make_questionarray(2) {
+  [0]=>
+  string(3) "cat"
+  [1]=>
+  string(3) "mat"
+}
++++++++++++++++array(2) {
+  [0]=>
+  object(question_answer)#10768 (6) {
+    ["id"]=>
+    int(43)
+    ["answer"]=>
+    string(3) "cat"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+  [1]=>
+  object(question_answer)#10769 (6) {
+    ["id"]=>
+    int(44)
+    ["answer"]=>
+    string(3) "mat"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+}
+----------------string(3) "cat"
+string(3) "mat"
+.make_questionarray(2) {
+  [0]=>
+  string(3) "cat"
+  [1]=>
+  string(3) "mat"
+}
++++++++++++++++array(2) {
+  [0]=>
+  object(question_answer)#10768 (6) {
+    ["id"]=>
+    int(43)
+    ["answer"]=>
+    string(3) "cat"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+  [1]=>
+  object(question_answer)#10769 (6) {
+    ["id"]=>
+    int(44)
+    ["answer"]=>
+    string(3) "mat"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+}
+----------------string(3) "cat"
+string(3) "mat"
+string(3) "cat"
+string(3) "mat"
+string(3) "cat"
+make_questionstring(26) "The [cat] sat on the [mat]"
++++++++++++++++array(2) {
+  [0]=>
+  object(question_answer)#11468 (6) {
+    ["id"]=>
+    int(43)
+    ["answer"]=>
+    string(1) "T"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+  [1]=>
+  object(question_answer)#10740 (6) {
+    ["id"]=>
+    int(44)
+    ["answer"]=>
+    string(1) "h"
+    ["answerformat"]=>
+    string(1) "2"
+    ["fraction"]=>
+    int(4)
+    ["feedback"]=>
+    int(1)
+    ["feedbackformat"]=>
+    int(1)
+  }
+}
+----------------object(qtype_gapfill_question)#5 (42) {
+  ["answer"]=>
+  NULL
+  ["answerdisplay"]=>
+  NULL
+  ["wronganswers"]=>
+  NULL
+  ["shuffledanswers"]=>
+  string(15) "mat,cat,bat,dog"
+  ["correctfeedback"]=>
+  NULL
+  ["noduplicates"]=>
+  NULL
+  ["partiallycorrectfeedback"]=>
+  string(0) ""
+  ["incorrectfeedback"]=>
+  string(0) ""
+  ["correctfeedbackformat"]=>
+  NULL
+  ["partiallycorrectfeedbackformat"]=>
+  NULL
+  ["incorrectfeedbackformat"]=>
+  NULL
+  ["casesensitive"]=>
+  string(1) "1"
+  ["answers"]=>
+  array(2) {
+    [0]=>
+    object(question_answer)#11468 (6) {
+      ["id"]=>
+      int(43)
+      ["answer"]=>
+      string(1) "T"
+      ["answerformat"]=>
+      string(1) "2"
+      ["fraction"]=>
+      int(4)
+      ["feedback"]=>
+      int(1)
+      ["feedbackformat"]=>
+      int(1)
+    }
+    [1]=>
+    object(question_answer)#10740 (6) {
+      ["id"]=>
+      int(44)
+      ["answer"]=>
+      string(1) "h"
+      ["answerformat"]=>
+      string(1) "2"
+      ["fraction"]=>
+      int(4)
+      ["feedback"]=>
+      int(1)
+      ["feedbackformat"]=>
+      int(1)
+    }
+  }
+  ["delimitchars"]=>
+  string(2) "[]"
+  ["places"]=>
+  array(2) {
+    [1]=>
+    string(1) "T"
+    [2]=>
+    string(1) "h"
+  }
+  ["textfragments"]=>
+  array(2) {
+    [0]=>
+    string(4) "The "
+    [1]=>
+    string(12) " sat on the "
+  }
+  ["rightchoices"]=>
+  NULL
+  ["allanswers"]=>
+  array(0) {
+  }
+  ["shownumcorrect"]=>
+  bool(false)
+  ["id"]=>
+  int(0)
+  ["category"]=>
+  int(0)
+  ["contextid"]=>
+  NULL
+  ["parent"]=>
+  int(0)
+  ["qtype"]=>
+  object(qtype_gapfill)#10738 (1) {
+    ["fileoptions":protected]=>
+    array(3) {
+      ["subdirs"]=>
+      bool(false)
+      ["maxfiles"]=>
+      int(-1)
+      ["maxbytes"]=>
+      int(0)
+    }
+  }
+  ["name"]=>
+  string(21) "Gapfill Test Question"
+  ["questiontext"]=>
+  string(26) "The [cat] sat on the [mat]"
+  ["questiontextformat"]=>
+  string(1) "1"
+  ["generalfeedback"]=>
+  string(60) "congratulations on your knowledge of pets and floor covering"
+  ["generalfeedbackformat"]=>
+  string(1) "1"
+  ["defaultmark"]=>
+  int(1)
+  ["length"]=>
+  int(1)
+  ["penalty"]=>
+  float(0.3333333)
+  ["stamp"]=>
+  string(31) "unknownhost+130324194902+xHt898"
+  ["version"]=>
+  string(31) "unknownhost+130324194902+H9QQZA"
+  ["hidden"]=>
+  int(0)
+  ["timecreated"]=>
+  int(1364154542)
+  ["timemodified"]=>
+  int(1364154542)
+  ["createdby"]=>
+  int(0)
+  ["modifiedby"]=>
+  int(0)
+  ["hints"]=>
+  array(2) {
+    [0]=>
+    object(question_hint)#10794 (3) {
+      ["id"]=>
+      int(1)
+      ["hint"]=>
+      string(23) "This is the first hint."
+      ["hintformat"]=>
+      string(1) "1"
+    }
+    [1]=>
+    object(question_hint)#10734 (3) {
+      ["id"]=>
+      int(2)
+      ["hint"]=>
+      string(24) "This is the second hint."
+      ["hintformat"]=>
+      string(1) "1"
+    }
+  }
+  ["displayanswers"]=>
+  string(1) "1"
+  ["options"]=>
+  object(stdClass)#11473 (12) {
+    ["showanswers"]=>
+    bool(false)
+    ["delimitchars"]=>
+    string(2) "[]"
+    ["casesensitive"]=>
+    bool(false)
+    ["correctfeedback"]=>
+    string(0) ""
+    ["correctfeedbackformat"]=>
+    string(0) ""
+    ["partiallycorrectfeedback"]=>
+    string(0) ""
+    ["partiallycorrectfeedbackformat"]=>
+    string(0) ""
+    ["incorrectfeedback"]=>
+    string(0) ""
+    ["incorrectfeedbackformat"]=>
+    string(0) ""
+    ["shuffledanswers"]=>
+    string(7) "mat,cat"
+    ["wronganswers"]=>
+    string(7) "bat,dog"
+    ["answers"]=>
+    array(2) {
+      [0]=>
+      object(question_answer)#11468 (6) {
+        ["id"]=>
+        int(43)
+        ["answer"]=>
+        string(1) "T"
+        ["answerformat"]=>
+        string(1) "2"
+        ["fraction"]=>
+        int(4)
+        ["feedback"]=>
+        int(1)
+        ["feedbackformat"]=>
+        int(1)
+      }
+      [1]=>
+      object(question_answer)#10740 (6) {
+        ["id"]=>
+        int(44)
+        ["answer"]=>
+        string(1) "h"
+        ["answerformat"]=>
+        string(1) "2"
+        ["fraction"]=>
+        int(4)
+        ["feedback"]=>
+        int(1)
+        ["feedbackformat"]=>
+        int(1)
+      }
+    }
+  }
+}

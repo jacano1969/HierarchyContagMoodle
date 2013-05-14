@@ -1,0 +1,109 @@
+html {
+        margin-bottom: 1px;
+        height: 100%!important; /* For Firefox */
+        height: auto;
+}
+
+body {
+        margin:  auto;
+        padding: 0;
+        margin-bottom: 1px;
+        height: 100%!important; /* For Firefox */
+        height: auto;
+}
+
+#eclass_ebook_header, #eclass_ebook_header div {
+        padding: 0 !important;
+	margin: 0 !important;
+}
+
+#eclass_ebook_header .ebook_right {
+        float: right;
+        padding: 5px !important;
+        text-align: right;
+}
+
+#eclass_ebook_header .ebook_left {
+        float: left;
+        padding: 5px !important;
+        color: #ffffff;
+}
+
+#eclass_ebook_header .controls {
+        padding-top: 8px !important;
+        text-align: center;
+}
+
+#eclass_ebook_header a img {
+        border: none;
+}
+
+#eclass_ebook_header {
+        position: fixed;
+        top: 0;
+        height: 80px;
+        margin: 0 auto !important;
+        width: 100%;
+        border-bottom: 3px solid #827C78;
+        background-color: #ffffff;
+        text-align: right;
+        min-width: 800px;
+		z-index: 100;
+}
+
+#eclass_ebook_header .tools {
+        height: 30px;
+        font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+        font-size: 13px;
+        z-index: 1;
+        background-color: #3B5999;
+        float: left;
+        width: 100%;
+}
+
+#eclass_ebook_header .tools a {
+        color: #ffffff;
+        text-decoration: none;
+        font-weight: bold;
+}
+
+#eclass_ebook_header .tools a:hover {
+        text-decoration: underline;
+        color: #ffffff;
+}
+
+#eclass_ebook_header .logo img {
+        float: left;
+}
+
+.eclass_ebook_clear {
+        clear: both;
+}
+
+#eclass_ebook_body {
+        margin-top: 80px;
+        clear: both;
+}
+
+span.glossary, a.glossary {
+        border-bottom: 1px dotted #727266;
+        color: #cc3333 !important;  
+        text-decoration: none !important;
+        cursor: help;
+}
+
+a.glossary:hover {
+        border-bottom: 1px solid #727266;
+        cursor: pointer;
+}
+
+.info_message {
+	background-color:#e1e9f9;
+	border-top: 2px solid #7fa4e7;
+	border-bottom: 2px solid #7fa4e7;
+	padding: 10px 50px;
+	background-image:url(img/info.png); 
+	background-repeat:no-repeat; 
+	background-position: left;
+	margin: 10px auto;
+	width: 600px;

@@ -1,0 +1,4 @@
+# HTTrack Website Copier Cookie File
+# This file format is compatible with Netscape cookies
+digitalschool.minedu.gov.gr	TRUE	/	FALSE	1999999999	PHPSESSID	1pun2eql73cj2v1n8bibo1o7v3
+
