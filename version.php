@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 
 // This file is part of Moodle - http://moodle.org/
@@ -38,3 +39,27 @@ $release  = '2.3.6+ (Build: 20130510)'; // Human-friendly version name
 
 $branch   = '23';                       // this version's branch
 $maturity = MATURITY_STABLE;            // this version's maturity level
+=======
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+$plugin->version =  2012121201;
+$plugin->requires = 2010112400;
+
+$plugin->cron = 86400; // 86400 seconds = run once a day
+$plugin->component = 'block_contag';
+$plugin->release = '1.01 (Build: 2012121201)';
+>>>>>>> b8f39e81ed1e228eced3a1b692a02a26f6f06a33
