@@ -14,14 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['pluginname'] = 'ConTag Dynamic Navigation Block';
-$string['contag_dynamic_navigation'] = 'ConTag Dynamic Navigation';
-//$string['contag_dynamic_navigation:addinstance'] = 'Add a new simple HTML block'; //will probably be removed
-//$string['contag_dynamic_navigation:myaddinstance'] = 'Add a new simple HTML block to the My Moodle page'; //will probably be removed
 
-$string['similar_concept_quiz'] = 'Similar Concept Quiz'; //will probably be removed
-$string['easier_concept_quiz'] = 'Easier Concept Quiz'; //will probably be removed
-$string['harder_concept_quiz'] = 'Harder Concept Quiz'; //will probably be removed
+/**
+ * Version details
+ *
+ * @package    block
+ * @subpackage block_contag_dynamic_navigation
+ * @copyright  2013 Marigianna Skouradaki
+ */
 
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+
+
+require_once('../../config.php');
 
 ?>

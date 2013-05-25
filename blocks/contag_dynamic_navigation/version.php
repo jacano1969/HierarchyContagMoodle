@@ -21,3 +21,4 @@ $plugin->cron = 86400; // 86400 seconds = run once a day
 $plugin->maturity = MATURITY_STABLE;
 $plugin->release = '2.0.3+ (Build: 20110511)';
 $plugin->component = 'block_contag_dynamic_navigation';
+$plugin->dependencies = array('block_contag' => ANY_VERSION);
