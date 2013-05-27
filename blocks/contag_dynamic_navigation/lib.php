@@ -27,6 +27,28 @@ error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
 
-require_once('../../config.php');
+//require_once('../../config.php');
+require_once($CFG->dirroot . '/mod/quiz/lib.php');
+require_once($CFG->dirroot . '/blocks/contag/lib.php');
+
+
+function get_tag_associations_from_quizid($courseid, $quizid)
+{
+	global $DB;
+	$sql = "SELECT A.id, A.tag_id, A.item_id, A.difficulty, Q.id, Q.course_id, Q.item_id
+FROM mdl_block_contag_association A
+INNER JOIN mdl_block_contag_item_quiz Q ON Q.id = A.item_id
+WHERE Q.item_id = ". $quizid."
+ORDER BY A.item_id
+";
+
+	//get result PHP object
+	$result = $DB -> get_records_sql($sql);
+	return ($result);	//as array
+	/*
+	 * 
+	 * 
+	 * */
+}
 
 ?>
