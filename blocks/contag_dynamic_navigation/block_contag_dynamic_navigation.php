@@ -23,7 +23,9 @@ require_once (dirname(__FILE__) . "/lib.php");
 
 defined('MOODLE_INTERNAL') || die();
 
+
 class block_contag_dynamic_navigation extends block_base {
+
 	public function init() {
 		$this -> title = get_string('contag_dynamic_navigation', 'block_contag_dynamic_navigation');
 	}
@@ -46,7 +48,6 @@ class block_contag_dynamic_navigation extends block_base {
 		if (!$cm) {
 			return 0;
 		}
-
 		return $cm;
 	}
 
@@ -64,33 +65,49 @@ class block_contag_dynamic_navigation extends block_base {
 
 		$this -> content = new stdClass;
 		$this -> content -> footer = '';
-		
-		
+
 		$cm = $this -> get_cm();
 
 		$quiz_tags = get_tag_associations_from_quizid($courseid, $cm -> id);
-		
-		if(isset($quiz_tags))
+		$link = $CFG -> wwwroot . '/blocks/contag_dynamic_navigation/';
+		//if the student has not chosen a working concept category
+		if (!isset($_POST['working_on_concept'])) {
+
+			if (isset($quiz_tags)) {
+				$res = get_string('quiz_associated_tags', 'block_contag_dynamic_navigation');
+
+				if (isset($_GET['attempt'])) {
+
+					$params = '?attempt=' . $_GET['attempt'] . '">';
+				} else {
+					$params = "";
+				}
+
+				$res .= get_tags_links($courseid, $quiz_tags, $link, $params);
+
+			} else {
+				$res = get_string('not_associated_with_tags', 'block_contag_dynamic_navigation');
+			}
+
+		} else//student has chosen a working concept
 		{
-			echo "quiz has tags: ";
-			print_r($quiz_tags);
-		}
-		else
-		{
-				echo "quiz not associated to any tags";
-		}
+				
+			$normalized_url = normalize_url($CFG -> wwwroot);
+			
+			$working_tag_id = $_POST['working_on_concept'];
+			
+			
+			$tag = get_tag_from_id($working_tag_id, $courseid);
+			$res = '<ul>';
+			$res .= get_difficulty_link(1,$tag,$courseid,$cm,$normalized_url,get_string('easy_concept_quiz', 'block_contag_dynamic_navigation'));  //1 for easy
+			$res .= get_difficulty_link(2,$tag,$courseid,$cm,$normalized_url,get_string('medium_concept_quiz', 'block_contag_dynamic_navigation'));  //1 for easy
+			$res .= get_difficulty_link(3,$tag,$courseid,$cm,$normalized_url,get_string('hard_concept_quiz', 'block_contag_dynamic_navigation'));  //1 for easy
 		
-		$res = '<ul>';
-		//$link = $CFG -> wwwroot . '/blocks/contag_dynamic_navigation/';
+			$res .= '</ul>';
 
-		// display "Navigate" link
-		//$res .= '<li>'.'<a href="'.$link.'view.php?id='.$courseid.'">'.get_string('navigate_by_concept_tags', 'block_contag').'</a>'.'</li>'; // TODO: Is it safe to pass in the courseid like this?
+		}
 
-		$res .= '<br/><li>' . '<a href="www.google.com">' . get_string('easier_concept_quiz', 'block_contag_dynamic_navigation') . '</a>' . '</li>';
-		$res .= '<br/><li>' . '<a href="#">' . get_string('similar_concept_quiz', 'block_contag_dynamic_navigation') . '</a>' . '</li>';
-		$res .= '<br/><li>' . '<a href="#">' . get_string('harder_concept_quiz', 'block_contag_dynamic_navigation') . '</a>' . '</li>';
-
-		$this -> content -> text = $res . '</ul>';
+		$this -> content -> text = $res;
 		// END BLOCK MAIN LINKS
 
 		return $this -> content;

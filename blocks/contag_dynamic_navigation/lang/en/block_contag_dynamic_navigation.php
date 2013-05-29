@@ -19,9 +19,13 @@ $string['contag_dynamic_navigation'] = 'ConTag Dynamic Navigation';
 //$string['contag_dynamic_navigation:addinstance'] = 'Add a new simple HTML block'; //will probably be removed
 //$string['contag_dynamic_navigation:myaddinstance'] = 'Add a new simple HTML block to the My Moodle page'; //will probably be removed
 
-$string['similar_concept_quiz'] = 'Similar Concept Quiz'; //will probably be removed
-$string['easier_concept_quiz'] = 'Easier Concept Quiz'; //will probably be removed
-$string['harder_concept_quiz'] = 'Harder Concept Quiz'; //will probably be removed
+$string['medium_concept_quiz'] = 'Medium Quiz on Concept: '; //will probably be removed
+$string['easy_concept_quiz'] = 'Easy Quiz on Concept: '; //will probably be removed
+$string['hard_concept_quiz'] = 'Hard Quiz on Concept: '; //will probably be removed
+
+$string['not_associated_with_tags'] = 'This quiz is not associated with any tags';
+$string['quiz_associated_tags'] = 'This quiz is associated with the followiing tags:';
+
 
 
 ?>
