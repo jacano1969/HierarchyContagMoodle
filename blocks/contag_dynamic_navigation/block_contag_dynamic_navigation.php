@@ -17,8 +17,14 @@
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
+define("CONTAG_DIFFICULTY_EASY", 1);
+define("CONTAG_DIFFICULTY_MEDIUM", 2);
+define("CONTAG_DIFFICULTY_HARD", 3);
+
 //require_once('../../config.php');
 require_once (dirname(__FILE__) . "/lib.php");
+require_once($CFG->dirroot.'/course/lib.php');
+
 // with just lib.php, this was failing depending on where the block was being seen!
 
 defined('MOODLE_INTERNAL') || die();
@@ -26,7 +32,9 @@ defined('MOODLE_INTERNAL') || die();
 
 class block_contag_dynamic_navigation extends block_base {
 
+	
 	public function init() {
+			
 		$this -> title = get_string('contag_dynamic_navigation', 'block_contag_dynamic_navigation');
 	}
 
@@ -53,37 +61,44 @@ class block_contag_dynamic_navigation extends block_base {
 
 	public function get_content() {
 
-		global $CFG, $COURSE;
+		global $CFG, $COURSE, $USER, $DB;
+
 
 		$courseid = $COURSE -> id;
-
+		$userid = $USER -> id;
+		
+		
 		$context = get_context_instance(CONTEXT_COURSE, $courseid);
-
 		if ($this -> content !== null) {
 			return $this -> content;
 		}
 
 		$this -> content = new stdClass;
 		$this -> content -> footer = '';
-
+	
 		$cm = $this -> get_cm();
-
+		
 		$quiz_tags = get_tag_associations_from_quizid($courseid, $cm -> id);
 		$link = $CFG -> wwwroot . '/blocks/contag_dynamic_navigation/';
+		/*test code*/
+		/* when i am a student it tries to hide activities while i do not have capability */
+		//if it works make a summary of that
+		
+		/*test code -- end*/
 		//if the student has not chosen a working concept category
 		if (!isset($_POST['working_on_concept'])) {
 
-			if (isset($quiz_tags)) {
-				$res = get_string('quiz_associated_tags', 'block_contag_dynamic_navigation');
-
+			if (isset($quiz_tags) && !empty($quiz_tags)) {
+				
 				if (isset($_GET['attempt'])) {
-
+					$res = get_string('quiz_associated_tags', 'block_contag_dynamic_navigation');
 					$params = '?attempt=' . $_GET['attempt'] . '">';
-				} else {
-					$params = "";
-				}
-
-				$res .= get_tags_links($courseid, $quiz_tags, $link, $params);
+					$res .= get_tags_links($courseid, $quiz_tags, $link, $params);
+				} 
+else
+{
+	$res = get_string('block_available_on_attempt', 'block_contag_dynamic_navigation');
+}
 
 			} else {
 				$res = get_string('not_associated_with_tags', 'block_contag_dynamic_navigation');
@@ -96,13 +111,14 @@ class block_contag_dynamic_navigation extends block_base {
 			
 			$working_tag_id = $_POST['working_on_concept'];
 			
-			
 			$tag = get_tag_from_id($working_tag_id, $courseid);
 			$res = '<ul>';
-			$res .= get_difficulty_link(1,$tag,$courseid,$cm,$normalized_url,get_string('easy_concept_quiz', 'block_contag_dynamic_navigation'));  //1 for easy
-			$res .= get_difficulty_link(2,$tag,$courseid,$cm,$normalized_url,get_string('medium_concept_quiz', 'block_contag_dynamic_navigation'));  //1 for easy
-			$res .= get_difficulty_link(3,$tag,$courseid,$cm,$normalized_url,get_string('hard_concept_quiz', 'block_contag_dynamic_navigation'));  //1 for easy
+			$res .= get_difficulty_link(CONTAG_DIFFICULTY_EASY,$tag,$courseid,$cm,$normalized_url,get_string('easy_concept_quiz', 'block_contag_dynamic_navigation'));  //1 for easy
+			$res .= get_difficulty_link(CONTAG_DIFFICULTY_MEDIUM,$tag,$courseid,$cm,$normalized_url,get_string('medium_concept_quiz', 'block_contag_dynamic_navigation'));  //2 for medium
+			$res .= get_difficulty_link(CONTAG_DIFFICULTY_HARD,$tag,$courseid,$cm,$normalized_url,get_string('hard_concept_quiz', 'block_contag_dynamic_navigation'));  //3 for hard
 		
+			$tmp =call_navigation_rules($courseid, $normalized_url, $userid, $cm, $working_tag_id);
+			
 			$res .= '</ul>';
 
 		}

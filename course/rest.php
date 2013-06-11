@@ -82,7 +82,7 @@ switch($requestmethod) {
 
                 switch ($field) {
                     case 'visible':
-                        require_capability('moodle/course:sectionvisibility', $coursecontext);
+                        require_capability('moodle/course:sectionvisibility', $coursecontext);						
                         $resourcestotoggle = set_section_visible($course->id, $id, $value);
                         echo json_encode(array('resourcestotoggle' => $resourcestotoggle));
                         break;

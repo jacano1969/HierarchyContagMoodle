@@ -168,7 +168,7 @@
         }
 
         if (has_capability('moodle/course:sectionvisibility', $context)) {
-            if ($hide && confirm_sesskey()) {
+            if ($hide && confirm_sesskey()) {				
                 set_section_visible($course->id, $hide, '0');
                 redirect($PAGE->url);
             }

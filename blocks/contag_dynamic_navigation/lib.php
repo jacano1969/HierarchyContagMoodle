@@ -32,6 +32,8 @@ require_once ($CFG -> dirroot . '/blocks/contag/lib.php');
 require_once ($CFG -> dirroot . '/blocks/contag/hierarchy_tree_lib.php');
 
 
+/**
+ * TODO: change that to work for any type*/
 function get_tag_associations_from_quizid($courseid, $quizid) {
 	global $DB;
 	$sql = "SELECT A.id, A.tag_id, A.item_id, A.difficulty, Q.id, Q.course_id, Q.item_id
@@ -48,97 +50,91 @@ function get_tag_associations_from_quizid($courseid, $quizid) {
 
 }
 
-function get_tags_links($courseid, $quiz_tags,$link,$params)
-{
-		
-	$res = '<form method="post" action="'.  $_SERVER['PHP_SELF'].$params.'<select name="working_on_concept">  <option value="" selected="selected"></option> ';
-    
-	foreach ($quiz_tags as $tag)
-	{
-		$tag = contag_get_tag_from_tag_id($courseid, $tag -> tag_id);	  
-       	$res .= '<option VALUE="'.$tag->id.'">'. $tag -> tag_name.'</option>';
+function get_tags_links($courseid, $quiz_tags, $link, $params) {
+
+	$res = '<form method="post" action="' . $_SERVER['PHP_SELF'] . $params . '<select name="working_on_concept">';
+
+	foreach ($quiz_tags as $tag) {
+		$tag = contag_get_tag_from_tag_id($courseid, $tag -> tag_id);
+		$res .= '<option VALUE="' . $tag -> id . '">' . $tag -> tag_name . '</option>';
 	}
-	$res .= '</select>
-    <INPUT TYPE="submit" name="submit"/>
-</form>';
+	$res .= '</select><button type="submit">'.get_string('submit_button', 'block_contag_dynamic_navigation').'</button></form>';
 
-return $res;
+	return $res;
 }
 
-function get_tag_from_id($tag_id,$courseid)
-{
-		global $DB;
+function get_tag_from_id($tag_id, $courseid) {
+	global $DB;
 
 	//get result PHP object
-		return $DB -> get_record('block_contag_tag', array('course_id' => $courseid, 'id' => $tag_id));
+	return $DB -> get_record('block_contag_tag', array('course_id' => $courseid, 'id' => $tag_id));
 
 }
 
-function get_module_id_from_tag_id($tag_id,$courseid)
-{
-		global $DB;
+function get_module_id_from_tag_id($tag_id, $courseid) {
+	global $DB;
 
 	//get result PHP object
-		return $DB -> get_record('block_contag_item_quiz', array('course_id' => $courseid, 'id' => $tag_id));
+	return $DB -> get_record('block_contag_item_quiz', array('course_id' => $courseid, 'id' => $tag_id));
 
 }
 
-function get_difficulty_link($difficulty,$tag,$courseid,$cm,$normalized_url,$difficulty_label)
-{
+/*
+ * TODO:
+ * might need modifying for fittng to all dynamically created links
+ * might need modifying to work for any type
+ * */
+
+function get_difficulty_link($difficulty, $tag, $courseid, $cm, $normalized_url, $difficulty_label) {
 	global $CFG;
-	$resp_tags_ids = call_get_tags_of_difficulty_ws($difficulty,$tag,$courseid,$cm,$normalized_url);
-	
-	
-	$resp_tags_ids = get_difficulty_tags_shuffled($resp_tags_ids,$courseid); 	//get all tags of this difficulty
-	
+	$resp_tags_ids = call_get_tags_of_difficulty_ws($difficulty, $tag, $courseid, $cm, $normalized_url);
+
+	$resp_tags_ids = get_difficulty_tags_shuffled($resp_tags_ids, $courseid);
+	//get all tags of this difficulty
+
 	$cnt = 0;
 	$res = '<br/><li>';
 	$end_res = "";
-	
-	foreach ($resp_tags_ids as $new_tag_id)
-	{
 
-			$new_quiz =  get_module_id_from_tag_id($new_tag_id , $courseid);
-			//error check : id does not correspond to quiz for some reason - go to next id 
-			if(isset($new_quiz))
+	foreach ($resp_tags_ids as $new_tag_id) {
+
+		$new_quiz = get_module_id_from_tag_id($new_tag_id, $courseid);
+		//error check : id does not correspond to quiz for some reason - go to next id
+		if (isset($new_quiz)) {
+			if ($new_quiz -> item_id != $cm -> id)//i do not need to link to the same quiz again
 			{
-				if($new_quiz -> item_id != $cm -> id)	//i do not need to link to the same quiz again
-				{
-			 		$link =  $CFG -> wwwroot.'/mod/quiz/view.php?id='.$new_quiz -> item_id ;
-					$res .= '<a href="'.$link.'">';
-					$end_res = '</a>' ;
-					break;
-				}
+				$link = $CFG -> wwwroot . '/mod/quiz/view.php?id=' . $new_quiz -> item_id;
+				$res .= '<a href="' . $link . '">';
+				$end_res = '</a>';
+				break;
 			}
+		}
 	}
-	$res .= $difficulty_label."on : ". $tag -> tag_name . $end_res. '</li>'; 	//make it look non-active when ids do not correspond
-		
-	return $res; 
+	$res .= $difficulty_label . "on : " . $tag -> tag_name . $end_res . '</li>';
+	//make it look non-active when ids do not correspond
+
+	return $res;
 }
 
-
-function get_difficulty_tags_shuffled($resp_tags_ids,$courseid)
-{
+function get_difficulty_tags_shuffled($resp_tags_ids, $courseid) {
 	$resp_tags_ids = json_decode($resp_tags_ids);
 	shuffle($resp_tags_ids);
 	return $resp_tags_ids;
 }
 
-function call_get_tags_of_difficulty_ws($difficulty,$tag,$courseid,$cm,$normalized_url)
-{
+function call_get_tags_of_difficulty_ws($difficulty, $tag, $courseid, $cm, $normalized_url) {
 	$web_service_url = 'http://83.212.123.121:8080/HierarchyServices/rest/gettagsfromdifficulty';
-	
+
 	$ws_item = new stdClass();
-	
-	
+
 	$ws_item -> difficulty = $difficulty;
 	$ws_item -> tag = $tag;
 	//$ws_item -> cm = $cm;  //causes problems in json configuration but it is not needed anyway
-	
 
 	$ws_item_json = json_encode($ws_item);
+	//print_r($ws_item_json);
 	$json = urlencode($ws_item_json);
-	
+
 	$encode_parameters = $normalized_url . "/" . $courseid . "/" . $json;
 
 	$call_web_service_url = $web_service_url . "/" . $encode_parameters;
@@ -147,5 +143,82 @@ function call_get_tags_of_difficulty_ws($difficulty,$tag,$courseid,$cm,$normaliz
 	return $resp_tags;
 }
 
+function call_navigation_rules($courseid, $normalized_url, $userid, $cm, $working_tag_id) {
+	$tag = get_tag_from_id($working_tag_id, $courseid);
+	$statistics_arr = get_statistics_arr($courseid, $userid, $cm, $working_tag_id);
+	$statistics_obj = get_statistics_obj($tag -> tree_node_id, $statistics_arr);
+	
+	echo "json_obj: \n".$statistics_obj;
+		
+	$json = urlencode($statistics_obj);
 
+	echo "I'm calling with: \n".$json;
+	//$web_service_url = 'http://83.212.123.121:8080/HierarchyServices/rest/triggerrules';
+
+	//$encode_parameters = $normalized_url . "/" . $courseid . "/" . $json;
+
+	//$call_web_service_url = $web_service_url . "/" . $encode_parameters;
+
+	//$resp_tags = file_get_contents($call_web_service_url);
+	//return $resp_tags;
+ }
+
+function get_statistics_arr($courseid, $userid, $cm, $working_tag_id) {
+	global $DB;
+	$sql = "
+ SELECT
+  association.difficulty AS 'difficulty', COUNT(qattempts.attempt) AS 'attempts'
+  , AVG(grades.grade)  AS 'grade'
+  FROM mdl_quiz quiz
+  INNER JOIN mdl_quiz_attempts    qattempts  ON quiz.id = qattempts.quiz
+  INNER JOIN mdl_course_modules    cource   ON quiz.id = cource.instance
+  INNER JOIN mdl_block_contag_item_quiz  ciquiz   ON cource.id = ciquiz.item_id
+  INNER JOIN mdl_block_contag_association association ON ciquiz.id = association.item_id
+  INNER JOIN mdl_quiz_grades grades ON grades.quiz = quiz.id
+  WHERE
+  association.tag_id = ".$working_tag_id." AND qattempts.state = 'finished' 
+  AND qattempts.userid = ".$userid." AND association.difficulty 
+  AND association.item_type = 'quiz'
+  GROUP BY association.difficulty"; 
+	//get result PHP object
+	$result = $DB -> get_records_sql($sql);
+	return ($result);
+
+}
+
+function get_constants_obj ($lowest_grade, $minimum_attempts)
+{
+	$obj = new stdClass ();
+	$obj -> lowest_grade = $lowest_grade;
+	$obj -> minimum_attempts = $minimum_attempts;
+	return $obj;
+}
+
+function get_statistics_obj($tree_node_id, $statistics_arr) {
+
+	$obj = new stdClass();
+	$obj -> tag_id = $tree_node_id;
+	$obj -> statistics =  $statistics_arr;
+/*
+ * TODO: change according to teacher's editing*/
+	$obj -> constants [CONTAG_DIFFICULTY_EASY] = get_constants_obj("70.0","5");
+	$obj -> constants [CONTAG_DIFFICULTY_MEDIUM] = get_constants_obj("60.0","4");
+	$obj -> constants [CONTAG_DIFFICULTY_HARD] = get_constants_obj("50.0","3");
+	return json_encode($obj);
+}
+
+function change_visibility_of_modules($cm, $moduleid, $visibility) {
+	global $DB;
+
+	$course = $DB -> get_record('course', array('id' => $cm -> course), '*', MUST_EXIST);
+
+	require_login($course, false, $cm);
+	//$coursecontext = get_context_instance(CONTEXT_COURSE, $course -> id);
+	$modcontext = get_context_instance(CONTEXT_MODULE, $moduleid);
+	//require_capability('moodle/course:activityvisibility', $modcontext);
+
+	set_coursemodule_visible($moduleid, $visibility);
+
+	rebuild_course_cache($cm -> course);
+}
 ?>
