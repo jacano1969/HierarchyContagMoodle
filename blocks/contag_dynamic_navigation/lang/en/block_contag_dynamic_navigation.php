@@ -28,6 +28,20 @@ $string['quiz_associated_tags'] = 'This quiz is associated with the followiing t
 $string['block_available_on_attempt']  ='This block is only available on attempt screens';
 $string['submit_button']  ='Go!';
 
-$string['new_concept_unlocked'] = 'Cogratulations! You can access new concepts:'
+$string['new_concept_unlocked'] = 'Cogratulations! You have unlocked new concepts:';
+
+$string['minimum_attempts_easy']  = "Minimum attempts on easy quizzes";
+$string['lowest_avg_grade_easy']  = "Lowest acceptable average grade (%) on easy quizzes";
+$string['minimum_attempts_medium']  = "Minimum attempts on medium quizzes";
+$string['lowest_avg_grade_medium']  = "Lowest acceptable average grade (%) on medium quizzes";
+$string['minimum_attempts_hard']  = "Minimum attempts on hard quizzes";
+$string['lowest_avg_grade_hard']  = "Lowest acceptable average grade (%) on hard quizzes";
+
+$string['minimum_attempts_easy_const']  = "5";
+$string['lowest_avg_grade_easy_const']  = "80";
+$string['minimum_attempts_medium_const']  = "4";
+$string['lowest_avg_grade_medium_const']  = "70";
+$string['minimum_attempts_hard_const']  = "3";
+$string['lowest_avg_grade_hard_const']  = "60";
 
 ?>

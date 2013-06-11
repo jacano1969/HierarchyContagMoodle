@@ -30,6 +30,10 @@ require_once ($CFG -> dirroot . '/mod/quiz/lib.php');
 require_once ($CFG -> dirroot . '/blocks/contag/lib.php');
 require_once ($CFG -> dirroot . '/blocks/contag/hierarchy_tree_lib.php');
 
+
+
+
+
 /**
  * TODO: change that to work for any type*/
 function get_tag_associations_from_quizid($courseid, $quizid) {
@@ -142,11 +146,11 @@ function call_get_tags_of_difficulty_ws($difficulty, $tag, $courseid, $cm, $norm
 	return $resp_tags;
 }
 
-function call_navigation_rules($courseid, $normalized_url, $userid, $cm, $working_tag_id) {
+function call_navigation_rules($courseid, $normalized_url, $userid, $cm, $working_tag_id,$conctants_arr) {
 	global $USER, $CFG, $DB;
 	$tag = get_tag_from_id($working_tag_id, $courseid);
 	$statistics_arr = get_statistics_arr($courseid, $userid, $cm, $working_tag_id);
-	$statistics_obj = get_statistics_obj($tag -> tree_node_id, $statistics_arr);
+	$statistics_obj = get_statistics_obj($tag -> tree_node_id, $statistics_arr,$conctants_arr);
 	//print_r($statistics_obj);
 	$json = urlencode($statistics_obj);
 
@@ -167,7 +171,7 @@ function call_navigation_rules($courseid, $normalized_url, $userid, $cm, $workin
 		//will go in if any new unlocked categories
 		foreach ($resp_tags as $key => $value) {
 			shuffle($value);
-			var_dump($value);
+			//var_dump($value);
 			$cnt = 0;
 			$res = '<br/>';
 			$end_res = "";
@@ -238,19 +242,41 @@ function get_constants_obj($lowest_grade, $minimum_attempts) {
 	return $obj;
 }
 
-function get_statistics_obj($tree_node_id, $statistics_arr) {
+function get_statistics_obj($tree_node_id, $statistics_arr,$conctants_arr) {
 
 	$obj = new stdClass();
 	$obj -> tag_id = $tree_node_id;
 
 	$obj -> statistics = $statistics_arr;
-
-
-	/*
-	 * TODO: change according to teacher's editing*/
-	$obj -> constants[CONTAG_DIFFICULTY_EASY] = get_constants_obj("20.0", "1");
-	$obj -> constants[CONTAG_DIFFICULTY_MEDIUM] = get_constants_obj("30.0", "1");
-	$obj -> constants[CONTAG_DIFFICULTY_HARD] = get_constants_obj("50.0", "1");
+	
+	if(!is_numeric($conctants_arr->lowest_avg_grade_easy))
+	{
+		$conctants_arr->lowest_avg_grade_easy = LOWEST_AVG_GRADE_EASY;
+	}
+		if(!is_numeric($conctants_arr->lowest_avg_grade_medium))
+	{
+		$conctants_arr->lowest_avg_grade_medium = LOWEST_AVG_GRADE_MEDIUM;
+	}
+		if(!is_numeric($conctants_arr->lowest_avg_grade_hard))
+	{
+		$conctants_arr->lowest_avg_grade_hard = LOWEST_AVG_GRADE_HARD;
+	}
+		if(!is_numeric($conctants_arr->minimum_attempts_easy))
+	{
+		$conctants_arr->minimum_attempts_easy = MINIMUM_ATTEMPTS_EASY;
+	}
+		if(!is_numeric($conctants_arr->minimum_attempts_medium))
+	{
+		$conctants_arr->minimum_attempts_medium = MINIMUM_ATTEMPTS_MEDIUM;
+	}
+		if(!is_numeric($conctants_arr->minimum_attempts_hard))
+	{
+		$conctants_arr->minimum_attempts_hard = MINIMUM_ATTEMPTS_HARD;
+	}
+	print_r($conctants_arr->lowest_avg_grade_easy);
+	$obj -> constants[CONTAG_DIFFICULTY_EASY] = get_constants_obj($conctants_arr->lowest_avg_grade_easy, $conctants_arr->minimum_attempts_easy);
+	$obj -> constants[CONTAG_DIFFICULTY_MEDIUM] = get_constants_obj($conctants_arr->lowest_avg_grade_medium, $conctants_arr->minimum_attempts_medium);
+	$obj -> constants[CONTAG_DIFFICULTY_HARD] = get_constants_obj($conctants_arr->lowest_avg_grade_hard, $conctants_arr->minimum_attempts_hard);
 	return json_encode($obj);
 }
 
