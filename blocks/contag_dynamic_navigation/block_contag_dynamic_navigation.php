@@ -117,7 +117,7 @@ else
 			$res .= get_difficulty_link(CONTAG_DIFFICULTY_MEDIUM,$tag,$courseid,$cm,$normalized_url,get_string('medium_concept_quiz', 'block_contag_dynamic_navigation'));  //2 for medium
 			$res .= get_difficulty_link(CONTAG_DIFFICULTY_HARD,$tag,$courseid,$cm,$normalized_url,get_string('hard_concept_quiz', 'block_contag_dynamic_navigation'));  //3 for hard
 		
-			$tmp =call_navigation_rules($courseid, $normalized_url, $userid, $cm, $working_tag_id);
+			$res .= call_navigation_rules($courseid, $normalized_url, $userid, $cm, $working_tag_id);
 			
 			$res .= '</ul>';
 

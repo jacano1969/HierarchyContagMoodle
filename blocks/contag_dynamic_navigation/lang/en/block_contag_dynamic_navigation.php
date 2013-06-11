@@ -27,4 +27,7 @@ $string['not_associated_with_tags'] = 'This quiz is not associated with any tags
 $string['quiz_associated_tags'] = 'This quiz is associated with the followiing tags:';
 $string['block_available_on_attempt']  ='This block is only available on attempt screens';
 $string['submit_button']  ='Go!';
+
+$string['new_concept_unlocked'] = 'Cogratulations! You can access new concepts:'
+
 ?>
