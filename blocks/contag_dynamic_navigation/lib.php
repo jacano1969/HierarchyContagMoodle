@@ -30,20 +30,17 @@ require_once ($CFG -> dirroot . '/mod/quiz/lib.php');
 require_once ($CFG -> dirroot . '/blocks/contag/lib.php');
 require_once ($CFG -> dirroot . '/blocks/contag/hierarchy_tree_lib.php');
 
-
-
-
-
 /**
  * TODO: change that to work for any type*/
 function get_tag_associations_from_quizid($courseid, $quizid) {
 	global $DB;
-	$sql = "SELECT A.id, A.tag_id, A.item_id, A.difficulty, Q.id, Q.course_id, Q.item_id
-			FROM mdl_block_contag_association A
-			INNER JOIN mdl_block_contag_item_quiz Q ON Q.id = A.item_id
-			WHERE Q.item_id = " . $quizid . "
-			ORDER BY A.item_id
-			";
+	$sql = "SELECT A.id as association_id, A.tag_id as tag_id, A.item_id as item_id,
+	 A.difficulty as difficulty, Q.id as quiz_id, Q.course_id as courseid,
+	  Q.item_id as item_id, T.tree_node_id as tree_node_id
+FROM mdl_block_contag_association A
+INNER JOIN mdl_block_contag_item_quiz Q ON Q.id = A.item_id
+RIGHT JOIN mdl_block_contag_tag T ON T.id = A.tag_id
+			WHERE Q.item_id = " . $quizid ;
 
 	//get result PHP object
 	$result = $DB -> get_records_sql($sql);
@@ -53,7 +50,6 @@ function get_tag_associations_from_quizid($courseid, $quizid) {
 }
 
 function get_tags_links($courseid, $quiz_tags, $link, $params) {
-
 	$res = '<form method="post" action="' . $_SERVER['PHP_SELF'] . $params . '<select name="working_on_concept">';
 
 	foreach ($quiz_tags as $tag) {
@@ -146,11 +142,11 @@ function call_get_tags_of_difficulty_ws($difficulty, $tag, $courseid, $cm, $norm
 	return $resp_tags;
 }
 
-function call_navigation_rules($courseid, $normalized_url, $userid, $cm, $working_tag_id,$conctants_arr) {
+function call_navigation_rules($courseid, $normalized_url, $userid, $cm, $working_tag_id, $conctants_arr) {
 	global $USER, $CFG, $DB;
 	$tag = get_tag_from_id($working_tag_id, $courseid);
 	$statistics_arr = get_statistics_arr($courseid, $userid, $cm, $working_tag_id);
-	$statistics_obj = get_statistics_obj($tag -> tree_node_id, $statistics_arr,$conctants_arr);
+	$statistics_obj = get_statistics_obj($tag -> tree_node_id, $statistics_arr, $conctants_arr);
 	//print_r($statistics_obj);
 	$json = urlencode($statistics_obj);
 
@@ -166,7 +162,7 @@ function call_navigation_rules($courseid, $normalized_url, $userid, $cm, $workin
 	$res = "";
 
 	if (!empty($resp_tags)) {
-	//	$jsonIterator = new RecursiveIteratorIterator(new RecursiveArrayIterator(json_decode($resp_tags), TRUE), RecursiveIteratorIterator::SELF_FIRST);
+		//	$jsonIterator = new RecursiveIteratorIterator(new RecursiveArrayIterator(json_decode($resp_tags), TRUE), RecursiveIteratorIterator::SELF_FIRST);
 
 		//will go in if any new unlocked categories
 		foreach ($resp_tags as $key => $value) {
@@ -188,15 +184,14 @@ function call_navigation_rules($courseid, $normalized_url, $userid, $cm, $workin
 						$end_res = '</a>';
 						$tree_node_id = intval($key);
 						$tag = $DB -> get_record("block_contag_tag", array("tree_node_id" => $tree_node_id));
-						$res .= $tag -> tag_name . $end_res ;
-						
+						$res .= $tag -> tag_name . $end_res;
+
 						//open new category to user
 						$group_member = get_new_member($USER -> id, $tree_node_id, $courseid);
 						$member = $DB -> insert_record('groups_members', $group_member);
 						break;
 					}
 				}
-				
 
 			}
 
@@ -207,12 +202,7 @@ function call_navigation_rules($courseid, $normalized_url, $userid, $cm, $workin
 
 function get_statistics_arr($courseid, $userid, $cm, $working_tag_id) {
 	global $DB;
-	
-	for ($i = 1; $i < 4; $i++) {
-			$result -> difficulty = $i;
-			$result -> attempts = "0";
-			$result -> grade = "0.0";
-	}
+
 	$sql = "
  SELECT
   association.difficulty AS 'difficulty', COUNT(qattempts.attempt) AS 'attempts'
@@ -242,41 +232,35 @@ function get_constants_obj($lowest_grade, $minimum_attempts) {
 	return $obj;
 }
 
-function get_statistics_obj($tree_node_id, $statistics_arr,$conctants_arr) {
+function get_statistics_obj($tree_node_id, $statistics_arr, $conctants_arr) {
 
 	$obj = new stdClass();
 	$obj -> tag_id = $tree_node_id;
 
 	$obj -> statistics = $statistics_arr;
-	
-	if(!is_numeric($conctants_arr->lowest_avg_grade_easy))
-	{
-		$conctants_arr->lowest_avg_grade_easy = LOWEST_AVG_GRADE_EASY;
+
+	if (!is_numeric($conctants_arr -> lowest_avg_grade_easy)) {
+		$conctants_arr -> lowest_avg_grade_easy = LOWEST_AVG_GRADE_EASY;
 	}
-		if(!is_numeric($conctants_arr->lowest_avg_grade_medium))
-	{
-		$conctants_arr->lowest_avg_grade_medium = LOWEST_AVG_GRADE_MEDIUM;
+	if (!is_numeric($conctants_arr -> lowest_avg_grade_medium)) {
+		$conctants_arr -> lowest_avg_grade_medium = LOWEST_AVG_GRADE_MEDIUM;
 	}
-		if(!is_numeric($conctants_arr->lowest_avg_grade_hard))
-	{
-		$conctants_arr->lowest_avg_grade_hard = LOWEST_AVG_GRADE_HARD;
+	if (!is_numeric($conctants_arr -> lowest_avg_grade_hard)) {
+		$conctants_arr -> lowest_avg_grade_hard = LOWEST_AVG_GRADE_HARD;
 	}
-		if(!is_numeric($conctants_arr->minimum_attempts_easy))
-	{
-		$conctants_arr->minimum_attempts_easy = MINIMUM_ATTEMPTS_EASY;
+	if (!is_numeric($conctants_arr -> minimum_attempts_easy)) {
+		$conctants_arr -> minimum_attempts_easy = MINIMUM_ATTEMPTS_EASY;
 	}
-		if(!is_numeric($conctants_arr->minimum_attempts_medium))
-	{
-		$conctants_arr->minimum_attempts_medium = MINIMUM_ATTEMPTS_MEDIUM;
+	if (!is_numeric($conctants_arr -> minimum_attempts_medium)) {
+		$conctants_arr -> minimum_attempts_medium = MINIMUM_ATTEMPTS_MEDIUM;
 	}
-		if(!is_numeric($conctants_arr->minimum_attempts_hard))
-	{
-		$conctants_arr->minimum_attempts_hard = MINIMUM_ATTEMPTS_HARD;
+	if (!is_numeric($conctants_arr -> minimum_attempts_hard)) {
+		$conctants_arr -> minimum_attempts_hard = MINIMUM_ATTEMPTS_HARD;
 	}
-	print_r($conctants_arr->lowest_avg_grade_easy);
-	$obj -> constants[CONTAG_DIFFICULTY_EASY] = get_constants_obj($conctants_arr->lowest_avg_grade_easy, $conctants_arr->minimum_attempts_easy);
-	$obj -> constants[CONTAG_DIFFICULTY_MEDIUM] = get_constants_obj($conctants_arr->lowest_avg_grade_medium, $conctants_arr->minimum_attempts_medium);
-	$obj -> constants[CONTAG_DIFFICULTY_HARD] = get_constants_obj($conctants_arr->lowest_avg_grade_hard, $conctants_arr->minimum_attempts_hard);
+	//print_r($conctants_arr -> lowest_avg_grade_easy);
+	$obj -> constants[CONTAG_DIFFICULTY_EASY] = get_constants_obj(strval($conctants_arr -> lowest_avg_grade_easy), strval($conctants_arr -> minimum_attempts_easy));
+	$obj -> constants[CONTAG_DIFFICULTY_MEDIUM] = get_constants_obj(strval($conctants_arr -> lowest_avg_grade_medium), strval($conctants_arr -> minimum_attempts_medium));
+	$obj -> constants[CONTAG_DIFFICULTY_HARD] = get_constants_obj(strval($conctants_arr -> lowest_avg_grade_hard), strval($conctants_arr -> minimum_attempts_hard));
 	return json_encode($obj);
 }
 
@@ -293,5 +277,36 @@ function change_visibility_of_modules($cm, $moduleid, $visibility) {
 	set_coursemodule_visible($moduleid, $visibility);
 
 	rebuild_course_cache($cm -> course);
+}
+
+function call_get_visible_quiz_tags($courseid, $cm,$normalized_url)
+{
+	global $USER;	
+	echo "i am here";
+	$web_service_url = 'http://83.212.123.121:8080/HierarchyServices/rest/getvisiblequiztags';
+	
+	$db_quiz_tags = get_tag_associations_from_quizid($courseid, $cm -> id);
+
+
+	$array = new ArrayObject();
+	$i= 0;
+	foreach($db_quiz_tags as $tag)
+	{
+		$array[$i] = $tag;
+		$i++;
+	}
+	
+
+	$ws_item_json = json_encode($array);
+		
+	$json = urlencode($ws_item_json);
+
+	$encode_parameters = $normalized_url . "/" . $courseid . "/".$USER->id. "/". $json;
+
+	$call_web_service_url = $web_service_url . "/" . $encode_parameters;
+
+	$resp_tags = file_get_contents($call_web_service_url);
+	$resp_tags = json_decode($resp_tags);
+	return $resp_tags;
 }
 ?>

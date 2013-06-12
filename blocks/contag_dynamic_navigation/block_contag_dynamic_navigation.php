@@ -79,8 +79,9 @@ class block_contag_dynamic_navigation extends block_base {
 		$this -> content -> footer = '';
 
 		$cm = $this -> get_cm();
-
-		$quiz_tags = get_tag_associations_from_quizid($courseid, $cm -> id);
+		$normalized_url = normalize_url($CFG -> wwwroot);
+	
+		$quiz_tags = call_get_visible_quiz_tags($courseid, $cm,$normalized_url);
 		$link = $CFG -> wwwroot . '/blocks/contag_dynamic_navigation/';
 		/*test code*/
 		/* when i am a student it tries to hide activities while i do not have capability */
@@ -104,13 +105,9 @@ class block_contag_dynamic_navigation extends block_base {
 				$res = get_string('not_associated_with_tags', 'block_contag_dynamic_navigation');
 			}
 
-		} else//student has chosen a working concept
-		{
-
-			$normalized_url = normalize_url($CFG -> wwwroot);
-
+		} 
+		else{
 			$working_tag_id = $_POST['working_on_concept'];
-
 			$tag = get_tag_from_id($working_tag_id, $courseid);
 			$res = '<ul>';
 			$res .= get_difficulty_link(CONTAG_DIFFICULTY_EASY, $tag, $courseid, $cm, $normalized_url, get_string('easy_concept_quiz', 'block_contag_dynamic_navigation'));
@@ -162,7 +159,6 @@ class block_contag_dynamic_navigation extends block_base {
 			} else {
 				$conctants_arr -> lowest_avg_grade_hard = LOWEST_AVG_GRADE_HARD;
 			}
-			//$conctants_arr= get_rules_configuration();
 			$res .= call_navigation_rules($courseid, $normalized_url, $userid, $cm, $working_tag_id, $conctants_arr);
 
 			$res .= '</ul>';
