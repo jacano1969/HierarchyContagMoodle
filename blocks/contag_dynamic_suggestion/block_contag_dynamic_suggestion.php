@@ -17,7 +17,6 @@
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
-
 define("LOWEST_GRADE", "70.0");
 define("MINIMUM_ATTEMPTS", "1");
 
@@ -37,6 +36,7 @@ class block_contag_dynamic_suggestion extends block_base {
 	public function init() {
 
 		$this -> title = get_string('contag_dynamic_suggestion', 'block_contag_dynamic_suggestion');
+	
 	}
 
 	/**
@@ -86,77 +86,62 @@ class block_contag_dynamic_suggestion extends block_base {
 		/*test code -- end*/
 		//if the student has not chosen a working concept category
 		if (!isset($_POST['working_on_concept'])) {
-			
 
-				$this -> content -> text = get_string('select_working_tag', 'block_contag_dynamic_suggestion');
+			$this -> content -> text = get_string('select_working_tag', 'block_contag_dynamic_suggestion');
 		} else//student has chosen a working concept
 		{
 
 			$normalized_url = normalize_url($CFG -> wwwroot);
 
 			$working_tag_id = $_POST['working_on_concept'];
-			$tag =  get_tag_from_id($working_tag_id, $courseid);
-	
+			$tag = get_tag_from_id($working_tag_id, $courseid);
+
 			$conctants_arr = new stdClass();
 			$statistics_arr = new stdClass();
 			$json_obj = new stdClass();
 			$json_obj -> tag_id = $tag -> tree_node_id;
 			$json_obj -> statistics = new ArrayObject();
 			$json_obj -> constants = new ArrayObject();
-			if(strcmp($this -> config -> quizconcept,"0") == 0)
-			{
-				$sql_end = " AND quiz.id =".$cm -> instance;
-				$statistics_arr  = get_suggestion_quiz_statistics($userid, $cm);
-			}
-			else {
-				$statistics_arr = get_suggestion_concept_statistics($working_tag_id, $userid) ;
+			if (strcmp($this -> config -> quizconcept, "0") == 0) {
+				$sql_end = " AND quiz.id =" . $cm -> instance;
+				$statistics_arr = get_suggestion_quiz_statistics($userid, $cm);
+			} else {
+				$statistics_arr = get_suggestion_concept_statistics($working_tag_id, $userid);
 			}
 
-			foreach($statistics_arr as $value)
-			{
-				$json_obj -> statistics [0] = $value;
+			foreach ($statistics_arr as $value) {
+				$json_obj -> statistics[0] = $value;
 			}
 			if (!empty($this -> config -> minimum_attempts)) {
-					$conctants_arr -> minimum_attempts = strval($this -> config -> minimum_attempts);
+				$conctants_arr -> minimum_attempts = strval($this -> config -> minimum_attempts);
 
-			} 
-			else 
-			{
-					$conctants_arr -> minimum_attempts = MINIMUM_ATTEMPTS;
+			} else {
+				$conctants_arr -> minimum_attempts = MINIMUM_ATTEMPTS;
 			}
 			if (!empty($this -> config -> lowest_grade)) {
-					$conctants_arr -> lowest_grade = strval($this -> config -> lowest_grade);
+				$conctants_arr -> lowest_grade = strval($this -> config -> lowest_grade);
 
-			} 
-			else
-			{
-					$conctants_arr -> lowest_grade = LOWEST_GRADE;
+			} else {
+				$conctants_arr -> lowest_grade = LOWEST_GRADE;
 			}
 			if (!empty($this -> config -> low_achievement_msg)) {
-					$conctants_arr -> low_achievement_msg = strval($this -> config -> low_achievement_msg);
+				$conctants_arr -> low_achievement_msg = strval($this -> config -> low_achievement_msg);
 
-			} 
-			else
-			{
+			} else {
 				$conctants_arr -> low_achievement_msg = LOW_ACHIEVEMENT_MSG;
 			}
 			if (!empty($this -> config -> high_achievement_msg)) {
-					$conctants_arr -> high_achievement_msg = strval($this -> config -> high_achievement_msg);
+				$conctants_arr -> high_achievement_msg = strval($this -> config -> high_achievement_msg);
 
-			} 
-			else
-			{
+			} else {
 				$conctants_arr -> minimum_attempts = HIGH_ACHIEVEMENT_MSG;
-			}			
-			$json_obj -> constants [0] = $conctants_arr;
-			
+			}
+			$json_obj -> constants[0] = $conctants_arr;
+
 			$this -> content -> text .= call_suggestion_rules($courseid, $normalized_url, $userid, $cm, $working_tag_id, json_encode($json_obj));
 
 		}
-
-		
-		// END BLOCK MAIN LINKS
-
+			
 		return $this -> content;
 	}
 

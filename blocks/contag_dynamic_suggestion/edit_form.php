@@ -23,6 +23,9 @@
 
 class block_contag_dynamic_suggestion_edit_form extends block_edit_form {
 	protected function specific_definition($mform) {
+			
+			
+			
 		$mform -> addElement('header', 'configheader', get_string('adaptivity_settings', 'block_contag_dynamic_suggestion'));
 
 		$mform->addElement('advcheckbox', 'config_quizconcept', get_string('concept','block_contag_dynamic_suggestion'),  get_string('focus','block_contag_dynamic_suggestion'), array('group' => 1), array(0, 1));
@@ -32,7 +35,7 @@ class block_contag_dynamic_suggestion_edit_form extends block_edit_form {
 		$mform -> addElement('text', 'config_high_achievement_msg', get_string('high_achievement_msg', 'block_contag_dynamic_suggestion'));
 		$mform -> addElement('text', 'config_minimum_attempts', get_string('minimum_attempts', 'block_contag_dynamic_suggestion'));
 		$mform -> addElement('text', 'config_lowest_grade', get_string('lowest_grade', 'block_contag_dynamic_suggestion'));
-
+		
 		$mform -> setDefault('config_low_achievement_msg', get_string('low_achievement_msg_const', 'block_contag_dynamic_suggestion'));
 		$mform -> setDefault('config_high_achievement_msg', get_string('high_achievement_msg_const', 'block_contag_dynamic_suggestion'));
 		$mform -> setDefault('config_minimum_attempts', get_string('minimum_attempts_const', 'block_contag_dynamic_suggestion'));
@@ -43,6 +46,7 @@ class block_contag_dynamic_suggestion_edit_form extends block_edit_form {
 		$mform -> setType('config_high_achievement_msg', PARAM_TEXT);
 		$mform -> setType('config_minimum_attempts', PARAM_INT);
 		$mform -> setType('config_lowest_grade', PARAM_INT);
+
 
 
 }

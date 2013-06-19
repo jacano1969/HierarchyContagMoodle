@@ -31,4 +31,5 @@ $string['focus'] = "Default : Quiz. Suggestion based on Quiz or Concept performa
 $string['quiz']  = "Quiz";
 $string['concept']  = "Concept";
 $string['select_working_tag'] = 'Please select working tag from ConTag Navigation Block';
+$string['image_high_achievement'] = 'Please select image for high achievements';
 ?>

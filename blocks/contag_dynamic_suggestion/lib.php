@@ -75,7 +75,7 @@ function get_module_link($type, $courseid, $id) {
 	return $res;
 }
 
-function get_forum_suggestion($resp_data,$courseid) {
+function get_forum_suggestion($resp_data, $courseid) {
 	if (property_exists($resp_data, "forum")) {
 		$res = '<li>';
 
@@ -84,9 +84,10 @@ function get_forum_suggestion($resp_data,$courseid) {
 		$cnt = 0;
 		foreach ($forum -> data as $forumid) {
 			$res .= get_module_link("forum", $courseid, $forumid);
-			$cnt ++ ;
-			if ($cnt == 3)
-			{ break;}
+			$cnt++;
+			if ($cnt == 3) {
+				break;
+			}
 		}
 		//fetch at most 3 values of forums and give links
 		$res .= '</li>';
@@ -95,8 +96,7 @@ function get_forum_suggestion($resp_data,$courseid) {
 	}
 }
 
-
-function get_page_suggestion($resp_data,$courseid) {
+function get_page_suggestion($resp_data, $courseid) {
 	if (property_exists($resp_data, "theory")) {
 		$res = '<li>';
 
@@ -105,9 +105,10 @@ function get_page_suggestion($resp_data,$courseid) {
 		$cnt = 0;
 		foreach ($theory -> data as $pageid) {
 			$res .= get_module_link("page", $courseid, $pageid);
-			$cnt ++ ;
-			if ($cnt == 3)
-			{ break;}
+			$cnt++;
+			if ($cnt == 3) {
+				break;
+			}
 		}
 		//fetch at most 3 values of forums and give links
 		$res .= '</li>';
@@ -130,33 +131,43 @@ function call_suggestion_rules($courseid, $normalized_url, $userid, $cm, $workin
 	$resp_data = json_decode($resp_data);
 
 	$res = urldecode($resp_data -> msg);
+	
 	$res .= '<br/><ul>';
 
 	//I got the object now for each field
 	if ($resp_data -> result == 0) {
+		$res .= '<img src="'.$CFG -> wwwroot."/blocks/contag_dynamic_suggestion/images/try_again".rand(1, 3).".gif"
+		.'"alt="Try Again..." width="60px" height="80px" style="float: right;" >';
 
-		$res .=  get_page_suggestion($resp_data,$courseid);
+		$res .= get_page_suggestion($resp_data, $courseid);
 		//help peers on forum
 		$res .= get_forum_suggestion($resp_data, $courseid);
 		$res .= '<li>';
 		$res .= $resp_data -> practice;
 		$res .= '</li>';
 
+			
 	} else {
+		$res .= '<img src="'.$CFG -> wwwroot."/blocks/contag_dynamic_suggestion/images/bravo".rand(1, 3)
+		.".gif".'"alt="Bravo!" width="60px" height="60px" style="float: right;" >';
+			
 		//search on the web
 		$res .= '<li>';
 
 		$web = $resp_data -> web;
 		$res .= $web -> text . " " . $tag -> tag_name;
 		$res .= '</li>';
-		$res .=  get_forum_suggestion($resp_data,$courseid);
+		$res .= get_forum_suggestion($resp_data, $courseid);
 		//help peers on forum
 
 		$res .= '<li>';
 		$res .= $resp_data -> practice;
 		$res .= '</li>';
+		
 	}
 	$res .= "</ul>";
 	return $res;
 }
+
+
 ?>
