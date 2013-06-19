@@ -43,5 +43,6 @@ $string['minimum_attempts_medium_const']  = "4";
 $string['lowest_avg_grade_medium_const']  = "70";
 $string['minimum_attempts_hard_const']  = "3";
 $string['lowest_avg_grade_hard_const']  = "60";
-
+$string['easier_concepts'] = "Random quiz on easier concepts:";
+$string['selected_concept'] = "The selected concept is: "
 ?>

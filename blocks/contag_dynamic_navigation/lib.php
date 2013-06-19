@@ -40,7 +40,7 @@ function get_tag_associations_from_quizid($courseid, $quizid) {
 FROM mdl_block_contag_association A
 INNER JOIN mdl_block_contag_item_quiz Q ON Q.id = A.item_id
 RIGHT JOIN mdl_block_contag_tag T ON T.id = A.tag_id
-			WHERE Q.item_id = " . $quizid ;
+			WHERE Q.item_id = " . $quizid;
 
 	//get result PHP object
 	$result = $DB -> get_records_sql($sql);
@@ -150,7 +150,7 @@ function call_navigation_rules($courseid, $normalized_url, $userid, $cm, $workin
 	//print_r($statistics_obj);
 	$json = urlencode($statistics_obj);
 
-	$web_service_url = 'http://83.212.123.121:8080/HierarchyServices/rest/triggerrules';
+	$web_service_url = 'http://83.212.123.121:8080/HierarchyServices/rest/completiontracking';
 
 	$encode_parameters = $normalized_url . "/" . $courseid . "/" . $USER -> id . "/" . $json;
 
@@ -200,6 +200,56 @@ function call_navigation_rules($courseid, $normalized_url, $userid, $cm, $workin
 	return $res;
 }
 
+function call_get_easier_concept($courseid, $normalized_url, $userid, $cm, $working_tag_id) {
+	global $USER, $CFG, $DB;
+	$tag = get_tag_from_id($working_tag_id, $courseid);
+
+	$web_service_url = 'http://83.212.123.121:8080/HierarchyServices/rest/geteasierconcepts';
+
+	$encode_parameters = $normalized_url . "/" . $courseid . "/" . $tag -> tree_node_id;
+
+	$call_web_service_url = $web_service_url . "/" . $encode_parameters;
+	$resp_tags = file_get_contents($call_web_service_url);
+	$resp_tags = json_decode($resp_tags);
+	$res = "";
+
+	if (!empty($resp_tags)) {
+		//	$jsonIterator = new RecursiveIteratorIterator(new RecursiveArrayIterator(json_decode($resp_tags), TRUE), RecursiveIteratorIterator::SELF_FIRST);
+
+		//will go in if any new unlocked categories
+		foreach ($resp_tags as $key => $value) {
+			if (!empty($value)) {
+				shuffle($value);
+	
+				$cnt = 0;
+				$res = '<br/>';
+				$end_res = "";
+				$res .= get_string('easier_concepts', 'block_contag_dynamic_navigation');
+				foreach ($value as $quiz) {
+
+					$random_quiz = get_module_id_from_tag_id($quiz, $courseid);
+					//error check : id does not correspond to quiz for some reason - go to next id
+					if (isset($random_quiz)) {
+						if ($random_quiz -> item_id != $cm -> id)//i do not need to link to the same quiz again
+						{
+							$link = $CFG -> wwwroot . '/mod/quiz/view.php?id=' . $random_quiz -> item_id;
+							$res .= '<a href="' . $link . '">';
+							$end_res = '</a>';
+							$tree_node_id = intval($key);
+							$tag = $DB -> get_record("block_contag_tag", array("tree_node_id" => $tree_node_id));
+							$res .= $tag -> tag_name . $end_res;
+							break;
+						}
+					}
+
+				}
+
+			}
+		}
+	}
+	return $res;
+}
+
 function get_statistics_arr($courseid, $userid, $cm, $working_tag_id) {
 	global $DB;
 
@@ -208,8 +258,8 @@ function get_statistics_arr($courseid, $userid, $cm, $working_tag_id) {
   association.difficulty AS 'difficulty', COUNT(qattempts.attempt) AS 'attempts'
   , AVG(grades.grade)  AS 'grade'
   FROM mdl_quiz quiz
-  INNER JOIN mdl_quiz_attempts    qattempts  ON quiz.id = qattempts.quiz
-  INNER JOIN mdl_course_modules    cource   ON quiz.id = cource.instance
+  INNER JOIN mdl_quiz_attempts qattempts  ON quiz.id = qattempts.quiz
+  INNER JOIN mdl_course_modules cource ON quiz.id = cource.instance
   INNER JOIN mdl_block_contag_item_quiz  ciquiz   ON cource.id = ciquiz.item_id
   INNER JOIN mdl_block_contag_association association ON ciquiz.id = association.item_id
   INNER JOIN mdl_quiz_grades grades ON grades.quiz = quiz.id
@@ -279,29 +329,24 @@ function change_visibility_of_modules($cm, $moduleid, $visibility) {
 	rebuild_course_cache($cm -> course);
 }
 
-function call_get_visible_quiz_tags($courseid, $cm,$normalized_url)
-{
-	global $USER;	
-	echo "i am here";
+function call_get_visible_quiz_tags($courseid, $cm, $normalized_url) {
+	global $USER;
 	$web_service_url = 'http://83.212.123.121:8080/HierarchyServices/rest/getvisiblequiztags';
-	
+
 	$db_quiz_tags = get_tag_associations_from_quizid($courseid, $cm -> id);
 
-
 	$array = new ArrayObject();
-	$i= 0;
-	foreach($db_quiz_tags as $tag)
-	{
+	$i = 0;
+	foreach ($db_quiz_tags as $tag) {
 		$array[$i] = $tag;
 		$i++;
 	}
-	
 
 	$ws_item_json = json_encode($array);
-		
+
 	$json = urlencode($ws_item_json);
 
-	$encode_parameters = $normalized_url . "/" . $courseid . "/".$USER->id. "/". $json;
+	$encode_parameters = $normalized_url . "/" . $courseid . "/" . $USER -> id . "/" . $json;
 
 	$call_web_service_url = $web_service_url . "/" . $encode_parameters;
 

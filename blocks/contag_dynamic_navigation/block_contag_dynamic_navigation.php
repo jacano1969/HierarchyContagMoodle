@@ -109,7 +109,12 @@ class block_contag_dynamic_navigation extends block_base {
 		else{
 			$working_tag_id = $_POST['working_on_concept'];
 			$tag = get_tag_from_id($working_tag_id, $courseid);
-			$res = '<ul>';
+			
+			
+		
+			$res = "<p>".get_string('selected_concept', 'block_contag_dynamic_navigation').'<b>'.$tag -> tag_name.'</b></p>';
+			$res .= '<ul>';
+			$res .= '<p>'.call_get_easier_concept($courseid, $normalized_url, $userid, $cm, $working_tag_id).'</p>';
 			$res .= get_difficulty_link(CONTAG_DIFFICULTY_EASY, $tag, $courseid, $cm, $normalized_url, get_string('easy_concept_quiz', 'block_contag_dynamic_navigation'));
 			//1 for easy
 			$res .= get_difficulty_link(CONTAG_DIFFICULTY_MEDIUM, $tag, $courseid, $cm, $normalized_url, get_string('medium_concept_quiz', 'block_contag_dynamic_navigation'));

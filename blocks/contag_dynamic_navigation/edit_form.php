@@ -16,7 +16,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Form for editing OpenSocial block instances.
+ * Form for editing Block ConTag Dynamic Navigation block instances.
  *
  * @copyright 2011 Evgeny Bogdanov
  */
