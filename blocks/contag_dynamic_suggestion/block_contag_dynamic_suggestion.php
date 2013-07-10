@@ -24,6 +24,8 @@ define("LOW_ACHIEVEMENT_MSG", "Hmm....I am sure you could do better!");
 define("HIGH_ACHIEVEMENT_MSG", "Cograts! You did very well!");
 
 //require_once('../../config.php');
+require_once ($CFG -> dirroot . '/blocks/contag/services/services.php');
+
 require_once (dirname(__FILE__) . "/lib.php");
 require_once ($CFG -> dirroot . '/course/lib.php');
 
@@ -36,7 +38,7 @@ class block_contag_dynamic_suggestion extends block_base {
 	public function init() {
 
 		$this -> title = get_string('contag_dynamic_suggestion', 'block_contag_dynamic_suggestion');
-	
+
 	}
 
 	/**
@@ -49,7 +51,6 @@ class block_contag_dynamic_suggestion extends block_base {
 			return 0;
 		}
 		$parentcontext = get_context_instance_by_id($this -> instance -> parentcontextid);
-		//print_r($parentcontext);
 		if ($parentcontext -> contextlevel != CONTEXT_MODULE) {
 			return 0;
 		}
@@ -77,7 +78,6 @@ class block_contag_dynamic_suggestion extends block_base {
 
 		$cm = $this -> get_cm();
 
-		$quiz_tags = get_tag_associations_from_quizid($courseid, $cm -> id);
 		$link = $CFG -> wwwroot . '/blocks/contag_dynamic_suggestion/';
 		/*test code*/
 		/* when i am a student it tries to hide activities while i do not have capability */
@@ -85,63 +85,69 @@ class block_contag_dynamic_suggestion extends block_base {
 
 		/*test code -- end*/
 		//if the student has not chosen a working concept category
-		if (!isset($_POST['working_on_concept'])) {
 
-			$this -> content -> text = get_string('select_working_tag', 'block_contag_dynamic_suggestion');
-		} else//student has chosen a working concept
-		{
-
-			$normalized_url = normalize_url($CFG -> wwwroot);
-
-			$working_tag_id = $_POST['working_on_concept'];
-			$tag = get_tag_from_id($working_tag_id, $courseid);
-
-			$conctants_arr = new stdClass();
-			$statistics_arr = new stdClass();
-			$json_obj = new stdClass();
-			$json_obj -> tag_id = $tag -> tree_node_id;
-			$json_obj -> statistics = new ArrayObject();
-			$json_obj -> constants = new ArrayObject();
-			if (strcmp($this -> config -> quizconcept, "0") == 0) {
-				$sql_end = " AND quiz.id =" . $cm -> instance;
-				$statistics_arr = get_suggestion_quiz_statistics($userid, $cm);
-			} else {
-				$statistics_arr = get_suggestion_concept_statistics($working_tag_id, $userid);
-			}
-
-			foreach ($statistics_arr as $value) {
-				$json_obj -> statistics[0] = $value;
-			}
-			if (!empty($this -> config -> minimum_attempts)) {
-				$conctants_arr -> minimum_attempts = strval($this -> config -> minimum_attempts);
-
-			} else {
-				$conctants_arr -> minimum_attempts = MINIMUM_ATTEMPTS;
-			}
-			if (!empty($this -> config -> lowest_grade)) {
-				$conctants_arr -> lowest_grade = strval($this -> config -> lowest_grade);
-
-			} else {
-				$conctants_arr -> lowest_grade = LOWEST_GRADE;
-			}
-			if (!empty($this -> config -> low_achievement_msg)) {
-				$conctants_arr -> low_achievement_msg = strval($this -> config -> low_achievement_msg);
-
-			} else {
-				$conctants_arr -> low_achievement_msg = LOW_ACHIEVEMENT_MSG;
-			}
-			if (!empty($this -> config -> high_achievement_msg)) {
-				$conctants_arr -> high_achievement_msg = strval($this -> config -> high_achievement_msg);
-
-			} else {
-				$conctants_arr -> minimum_attempts = HIGH_ACHIEVEMENT_MSG;
-			}
-			$json_obj -> constants[0] = $conctants_arr;
-
-			$this -> content -> text .= call_suggestion_rules($courseid, $normalized_url, $userid, $cm, $working_tag_id, json_encode($json_obj));
-
-		}
+		if (isset($_GET['attempt'])) {
 			
+			if (!isset($_POST['working_on_concept'])) {
+
+				$this -> content -> text = get_string('select_working_tag', 'block_contag_dynamic_suggestion');
+			} else//student has chosen a working concept
+			{
+
+				$normalized_url = normalize_url($CFG -> wwwroot);
+
+				$working_tag_id = $_POST['working_on_concept'];
+				$tag = get_tag_from_id($working_tag_id, $courseid);
+
+				$conctants_arr = new stdClass();
+				$statistics_arr = new stdClass();
+				$json_obj = new stdClass();
+				$json_obj -> tag_id = $tag -> tree_node_id;
+				$json_obj -> statistics = new ArrayObject();
+				$json_obj -> constants = new ArrayObject();
+				if (strcmp($this -> config -> quizconcept, "0") == 0) {
+					$sql_end = " AND quiz.id =" . $cm -> instance;
+					$statistics_arr = get_suggestion_quiz_statistics($userid, $cm);
+				} else {
+					$statistics_arr = get_suggestion_concept_statistics($working_tag_id, $userid);
+				}
+
+				foreach ($statistics_arr as $value) {
+					$json_obj -> statistics[0] = $value;
+				}
+				if (!empty($this -> config -> minimum_attempts)) {
+					$conctants_arr -> minimum_attempts = strval($this -> config -> minimum_attempts);
+
+				} else {
+					$conctants_arr -> minimum_attempts = MINIMUM_ATTEMPTS;
+				}
+				if (!empty($this -> config -> lowest_grade)) {
+					$conctants_arr -> lowest_grade = strval($this -> config -> lowest_grade);
+
+				} else {
+					$conctants_arr -> lowest_grade = LOWEST_GRADE;
+				}
+				if (!empty($this -> config -> low_achievement_msg)) {
+					$conctants_arr -> low_achievement_msg = strval($this -> config -> low_achievement_msg);
+
+				} else {
+					$conctants_arr -> low_achievement_msg = LOW_ACHIEVEMENT_MSG;
+				}
+				if (!empty($this -> config -> high_achievement_msg)) {
+					$conctants_arr -> high_achievement_msg = strval($this -> config -> high_achievement_msg);
+
+				} else {
+					$conctants_arr -> minimum_attempts = HIGH_ACHIEVEMENT_MSG;
+				}
+				$json_obj -> constants[0] = $conctants_arr;
+
+				$this -> content -> text .= call_suggestion_rules($courseid, $normalized_url, $userid, $cm, $working_tag_id, json_encode($json_obj));
+
+			}
+		} else {
+			$this -> content -> text  = get_string('block_available_on_attempt', 'block_contag_dynamic_navigation');
+		}
+
 		return $this -> content;
 	}
 

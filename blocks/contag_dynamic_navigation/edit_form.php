@@ -33,12 +33,12 @@ class block_contag_dynamic_navigation_edit_form extends block_edit_form {
 		$mform -> addElement('text', 'config_minimum_attempts_hard', get_string('minimum_attempts_hard', 'block_contag_dynamic_navigation'));
 		$mform -> addElement('text', 'config_lowest_avg_grade_hard', get_string('lowest_avg_grade_hard', 'block_contag_dynamic_navigation'));
 
-		$mform -> setDefault('config_minimum_attempts_easy', get_string('minimum_attempts_easy', 'block_contag_dynamic_navigation'));
-		$mform -> setDefault('config_lowest_avg_grade_easy', get_string('lowest_avg_grade_easy', 'block_contag_dynamic_navigation'));
-		$mform -> setDefault('config_minimum_attempts_medium', get_string('minimum_attempts_medium', 'block_contag_dynamic_navigation'));
-		$mform -> setDefault('config_lowest_avg_grade_medium', get_string('lowest_avg_grade_medium', 'block_contag_dynamic_navigation'));
-		$mform -> setDefault('config_minimum_attempts_hard', get_string('minimum_attempts_hard', 'block_contag_dynamic_navigation'));
-		$mform -> setDefault('config_lowest_avg_grade_hard', get_string('lowest_avg_grade_hard', 'block_contag_dynamic_navigation'));
+		$mform -> setDefault('config_minimum_attempts_easy', 5);
+		$mform -> setDefault('config_lowest_avg_grade_easy',80);
+		$mform -> setDefault('config_minimum_attempts_medium', 4);
+		$mform -> setDefault('config_lowest_avg_grade_medium', 70);
+		$mform -> setDefault('config_minimum_attempts_hard', 3);
+		$mform -> setDefault('config_lowest_avg_grade_hard', 60);
 
 		$mform -> setType('config_minimum_attempts_easy', PARAM_INT );
 		$mform -> setType('config_lowest_avg_grade_easy', PARAM_INT );

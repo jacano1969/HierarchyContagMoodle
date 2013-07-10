@@ -28,6 +28,7 @@ define("MINIMUM_ATTEMPTS_MEDIUM", "4");
 define("MINIMUM_ATTEMPTS_HARD", "3");
 
 //require_once('../../config.php');
+
 require_once (dirname(__FILE__) . "/lib.php");
 require_once ($CFG -> dirroot . '/course/lib.php');
 
@@ -80,94 +81,102 @@ class block_contag_dynamic_navigation extends block_base {
 
 		$cm = $this -> get_cm();
 		$normalized_url = normalize_url($CFG -> wwwroot);
-	
-		$quiz_tags = call_get_visible_quiz_tags($courseid, $cm,$normalized_url);
+
+		$quiz_tags = call_get_visible_quiz_tags($courseid, $cm, $normalized_url);
 		$link = $CFG -> wwwroot . '/blocks/contag_dynamic_navigation/';
+
+//print_r($quiz_tags);
 		/*test code*/
 		/* when i am a student it tries to hide activities while i do not have capability */
 		//if it works make a summary of that
 
 		/*test code -- end*/
 		//if the student has not chosen a working concept category
-		if (!isset($_POST['working_on_concept'])) {
+		if (isset($_GET['attempt'])) {
+			if (!isset($_POST['working_on_concept']) && !isset($_SESSION['working_on_concept'])) {
 
-			if (isset($quiz_tags) && !empty($quiz_tags)) {
+				if (isset($quiz_tags) || !empty($quiz_tags)) {
 
-				if (isset($_GET['attempt'])) {
 					$res = get_string('quiz_associated_tags', 'block_contag_dynamic_navigation');
 					$params = '?attempt=' . $_GET['attempt'] . '">';
 					$res .= get_tags_links($courseid, $quiz_tags, $link, $params);
+
 				} else {
-					$res = get_string('block_available_on_attempt', 'block_contag_dynamic_navigation');
+					$res = get_string('not_associated_with_tags', 'block_contag_dynamic_navigation');
 				}
 
 			} else {
-				$res = get_string('not_associated_with_tags', 'block_contag_dynamic_navigation');
-			}
+				if (isset($_POST['working_on_concept'])) {
+					$working_tag_id = $_POST['working_on_concept'];
+					$_SESSION['working_on_concept'] = $working_tag_id;
+				} if (isset($_SESSION['working_on_concept'])) {
+					$working_tag_id = $_SESSION['working_on_concept'];
+					$_POST['working_on_concept'] = $working_tag_id;
+				}
 
-		} 
-		else{
-			$working_tag_id = $_POST['working_on_concept'];
-			$tag = get_tag_from_id($working_tag_id, $courseid);
-			
-			
-		
-			$res = "<p>".get_string('selected_concept', 'block_contag_dynamic_navigation').'<b>'.$tag -> tag_name.'</b></p>';
-			$res .= '<ul>';
-			$res .= '<p>'.call_get_easier_concept($courseid, $normalized_url, $userid, $cm, $working_tag_id).'</p>';
-			$res .= get_difficulty_link(CONTAG_DIFFICULTY_EASY, $tag, $courseid, $cm, $normalized_url, get_string('easy_concept_quiz', 'block_contag_dynamic_navigation'));
-			//1 for easy
-			$res .= get_difficulty_link(CONTAG_DIFFICULTY_MEDIUM, $tag, $courseid, $cm, $normalized_url, get_string('medium_concept_quiz', 'block_contag_dynamic_navigation'));
-			//2 for medium
-			$res .= get_difficulty_link(CONTAG_DIFFICULTY_HARD, $tag, $courseid, $cm, $normalized_url, get_string('hard_concept_quiz', 'block_contag_dynamic_navigation'));
-			//3 for hard
+				$tag = get_tag_from_id($working_tag_id, $courseid);
 
-			$conctants_arr = new stdClass();
-			if (!empty($this -> config -> minimum_attempts_easy)) {
+				$res = "<p>" . get_string('selected_concept', 'block_contag_dynamic_navigation') . '<b>' . $tag -> tag_name . '</b></p>';
+				$res .= '<ul>';
+				$res .= '<p>' . call_get_easier_concept($courseid, $normalized_url, $userid, $cm, $working_tag_id) . '</p>';
+				$res .= get_difficulty_link(CONTAG_DIFFICULTY_EASY, $tag, $courseid, $cm, $normalized_url, get_string('easy_concept_quiz', 'block_contag_dynamic_navigation'));
+				//1 for easy
+				$res .= get_difficulty_link(CONTAG_DIFFICULTY_MEDIUM, $tag, $courseid, $cm, $normalized_url, get_string('medium_concept_quiz', 'block_contag_dynamic_navigation'));
+				//2 for medium
+				$res .= get_difficulty_link(CONTAG_DIFFICULTY_HARD, $tag, $courseid, $cm, $normalized_url, get_string('hard_concept_quiz', 'block_contag_dynamic_navigation'));
+				//3 for hard
+
+				$conctants_arr = new stdClass();
+				if (!empty($this -> config -> minimum_attempts_easy)) {
 					$conctants_arr -> minimum_attempts_easy = $this -> config -> minimum_attempts_easy;
 
-			} else {
-				$conctants_arr -> minimum_attempts_easy = MINIMUM_ATTEMPTS_EASY;
-			}
+				} else {
+					$conctants_arr -> minimum_attempts_easy = MINIMUM_ATTEMPTS_EASY;
+				}
 
-			if (!empty($this -> config -> lowest_avg_grade_easy)) {
+				if (!empty($this -> config -> lowest_avg_grade_easy)) {
 					$conctants_arr -> lowest_avg_grade_easy = $this -> config -> lowest_avg_grade_easy;
 
-			} else {
-				$conctants_arr -> lowest_avg_grade_easy = LOWEST_AVG_GRADE_EASY;
-			}
+				} else {
+					$conctants_arr -> lowest_avg_grade_easy = LOWEST_AVG_GRADE_EASY;
+				}
 
-			if (!empty($this -> config -> minimum_attempts_medium)) {
+				if (!empty($this -> config -> minimum_attempts_medium)) {
 					$conctants_arr -> minimum_attempts_medium = $this -> config -> minimum_attempts_medium;
 
-			} else {
-				$conctants_arr -> minimum_attempts_medium = MINIMUM_ATTEMPTS_MEDIUM;
-			}
+				} else {
+					$conctants_arr -> minimum_attempts_medium = MINIMUM_ATTEMPTS_MEDIUM;
+				}
 
-			if (!empty($this -> config -> lowest_avg_grade_medium)) {
+				if (!empty($this -> config -> lowest_avg_grade_medium)) {
 					$conctants_arr -> lowest_avg_grade_medium = $this -> config -> lowest_avg_grade_medium;
 
-			} else {
-				$conctants_arr -> lowest_avg_grade_medium = LOWEST_AVG_GRADE_MEDIUM;
-			}
+				} else {
+					$conctants_arr -> lowest_avg_grade_medium = LOWEST_AVG_GRADE_MEDIUM;
+				}
 
-			if (!empty($this -> config -> minimum_attempts_hard)) {
+				if (!empty($this -> config -> minimum_attempts_hard)) {
 					$conctants_arr -> minimum_attempts_hard = $this -> config -> minimum_attempts_hard;
-			} else {
-				$conctants_arr -> minimum_attempts_hard = MINIMUM_ATTEMPTS_HARD;
-			}
+				} else {
+					$conctants_arr -> minimum_attempts_hard = MINIMUM_ATTEMPTS_HARD;
+				}
 
-			if (!empty($this -> config -> lowest_avg_grade_hard)) {
-				
+				if (!empty($this -> config -> lowest_avg_grade_hard)) {
+
 					$conctants_arr -> lowest_avg_grade_hard = $this -> config -> lowest_avg_grade_hard;
 
-			} else {
-				$conctants_arr -> lowest_avg_grade_hard = LOWEST_AVG_GRADE_HARD;
+				} else {
+					$conctants_arr -> lowest_avg_grade_hard = LOWEST_AVG_GRADE_HARD;
+				}
+				$res .= call_navigation_rules($courseid, $normalized_url, $userid, $cm, $working_tag_id, $conctants_arr);
+
+				$res .= '</ul>';
+
 			}
-			$res .= call_navigation_rules($courseid, $normalized_url, $userid, $cm, $working_tag_id, $conctants_arr);
-
-			$res .= '</ul>';
-
+		} else {
+			$res = get_string('block_available_on_attempt', 'block_contag_dynamic_navigation');
+			unset($_SESSION['working_on_concept']);
+			unset($_POST['working_on_concept']);
 		}
 
 		$this -> content -> text = $res;
@@ -181,6 +190,7 @@ class block_contag_dynamic_navigation extends block_base {
 	 * @return array
 	 */
 	function applicable_formats() {
+		
 		return array('mod-quiz' => true);
 		//appears only on quizes
 		//return array('mod-*' => true);

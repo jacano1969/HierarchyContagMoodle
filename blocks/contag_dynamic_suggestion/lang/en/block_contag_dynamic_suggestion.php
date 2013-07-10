@@ -32,4 +32,6 @@ $string['quiz']  = "Quiz";
 $string['concept']  = "Concept";
 $string['select_working_tag'] = 'Please select working tag from ConTag Navigation Block';
 $string['image_high_achievement'] = 'Please select image for high achievements';
+$string['error_opening_ws'] = 'Error opening the Web Service. Functionallity might be unpredictable. Please try to reboot the Web Service Server';
+
 ?>
