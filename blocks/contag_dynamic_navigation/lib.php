@@ -73,11 +73,11 @@ function get_tag_from_id($tag_id, $courseid) {
 
 }
 
-function get_module_id_from_tag_id($tag_id, $courseid) {
+function get_module_id_from_tag_id($resource_id, $courseid) {
 	global $DB;
 
 	//get result PHP object
-	return $DB -> get_record('block_contag_item_quiz', array('course_id' => $courseid, 'id' => $tag_id));
+	return $DB -> get_record('block_contag_item_quiz', array('course_id' => $courseid, 'id' => $resource_id));
 
 }
 
@@ -99,9 +99,9 @@ function get_difficulty_link($difficulty, $tag, $courseid, $cm, $normalized_url,
 		$res = '<br/><li>';
 		$end_res = "";
 
-		foreach ($resp_tags_ids as $new_tag_id) {
+		foreach ($resp_tags_ids as $resource_id) {
 
-			$new_quiz = get_module_id_from_tag_id($new_tag_id, $courseid);
+			$new_quiz = get_module_id_from_tag_id($resource_id, $courseid);
 			//error check : id does not correspond to quiz for some reason - go to next id
 			if (isset($new_quiz)) {
 				if ($new_quiz -> item_id != $cm -> id)//i do not need to link to the same quiz again
@@ -144,6 +144,7 @@ function call_get_tags_of_difficulty_ws($difficulty, $tag, $courseid, $cm, $norm
 	//$ws_item -> cm = $cm;  //causes problems in json configuration but it is not needed anyway
 
 	$ws_item_json = json_encode($ws_item);
+
 	$json = urlencode($ws_item_json);
 
 	$encode_parameters = $normalized_url . "/" . $courseid . "/" . $json;
@@ -161,8 +162,9 @@ function call_get_tags_of_difficulty_ws($difficulty, $tag, $courseid, $cm, $norm
 
 function call_navigation_rules($courseid, $normalized_url, $userid, $cm, $working_tag_id, $conctants_arr) {
 	global $USER, $CFG, $DB,$web_service;
-	
+	echo $working_tag_id;
 	$tag = get_tag_from_id($working_tag_id, $courseid);
+
 	$statistics_arr = get_statistics_arr($courseid, $userid, $cm, $working_tag_id);
 	$statistics_obj = get_statistics_obj($tag -> tree_node_id, $statistics_arr, $conctants_arr);
 
@@ -179,40 +181,35 @@ function call_navigation_rules($courseid, $normalized_url, $userid, $cm, $workin
 		$res = "";
 
 		if (!empty($resp_tags)) {
-			//print_r($resp_tags);
 			//	$jsonIterator = new RecursiveIteratorIterator(new RecursiveArrayIterator(json_decode($resp_tags), TRUE), RecursiveIteratorIterator::SELF_FIRST);
-
+			$res .= '<br/>';
+			$res .= get_string('new_concept_unlocked', 'block_contag_dynamic_navigation');	
 			//will go in if any new unlocked categories
 			foreach ($resp_tags as $key => $value) {
+				
 				shuffle($value);
-				//var_dump($value);
-				$cnt = 0;
-				$res = '<br/>';
-				$end_res = "";
-				$res .= get_string('new_concept_unlocked', 'block_contag_dynamic_navigation');
 				foreach ($value as $quiz) {
 
-					$random_quiz = get_module_id_from_tag_id($tag -> id, $courseid);
+					$random_quiz = get_module_id_from_tag_id($quiz, $courseid);
 					//error check : id does not correspond to quiz for some reason - go to next id
 					if (isset($random_quiz)) {
 						if ($random_quiz -> item_id != $cm -> id)//i do not need to link to the same quiz again
 						{
 							$link = $CFG -> wwwroot . '/mod/quiz/view.php?id=' . $random_quiz -> item_id;
 							$res .= '<a href="' . $link . '">';
-							$end_res = '</a>';
 							$tree_node_id = intval($key);
 							$tag = $DB -> get_record("block_contag_tag", array("tree_node_id" => $tree_node_id));
+							$end_res = '</a><br/>';
 							$res .= $tag -> tag_name . $end_res;
 
 							//open new category to user
 							$group_member = get_new_member($USER -> id, $tree_node_id, $courseid);
 							$member = $DB -> insert_record('groups_members', $group_member);
+						
 							break;
 						}
 					}
-
 				}
-
 			}
 		}
 	} else {
@@ -235,19 +232,20 @@ function call_get_easier_concept($courseid, $normalized_url, $userid, $cm, $work
 	if (true == @file_get_contents($call_web_service_url)) {
 		$resp_tags = file_get_contents($call_web_service_url);
 		$resp_tags = json_decode($resp_tags);
-
+		
 		if (!empty($resp_tags)) {
 			//	$jsonIterator = new RecursiveIteratorIterator(new RecursiveArrayIterator(json_decode($resp_tags), TRUE), RecursiveIteratorIterator::SELF_FIRST);
-
+			
 			//will go in if any new unlocked categories
+			$res .= get_string('easier_concepts', 'block_contag_dynamic_navigation');
 			foreach ($resp_tags as $key => $value) {
 				if (!empty($value)) {
 					shuffle($value);
 
 					$cnt = 0;
-					$res = '<br/>';
+					$res .= '<br/>';
 					$end_res = "";
-					$res .= get_string('easier_concepts', 'block_contag_dynamic_navigation');
+				
 					foreach ($value as $quiz) {
 
 						$random_quiz = get_module_id_from_tag_id($quiz, $courseid);

@@ -53,7 +53,7 @@ class block_contag_dynamic_navigation extends block_base {
 			return 0;
 		}
 		$parentcontext = get_context_instance_by_id($this -> instance -> parentcontextid);
-		//print_r($parentcontext);
+
 		if ($parentcontext -> contextlevel != CONTEXT_MODULE) {
 			return 0;
 		}
@@ -85,12 +85,6 @@ class block_contag_dynamic_navigation extends block_base {
 		$quiz_tags = call_get_visible_quiz_tags($courseid, $cm, $normalized_url);
 		$link = $CFG -> wwwroot . '/blocks/contag_dynamic_navigation/';
 
-//print_r($quiz_tags);
-		/*test code*/
-		/* when i am a student it tries to hide activities while i do not have capability */
-		//if it works make a summary of that
-
-		/*test code -- end*/
 		//if the student has not chosen a working concept category
 		if (isset($_GET['attempt'])) {
 			if (!isset($_POST['working_on_concept']) && !isset($_SESSION['working_on_concept'])) {
